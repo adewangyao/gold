@@ -6,6 +6,8 @@ const CreateList = ()=>import('@/components/StudyDesign/Create/CreateList')
 const ShareList = ()=>import('@/components/StudyDesign/Share/ShareList')
 const ClassifyList = ()=>import('@/components/StudyDesign/Classify/ClassifyList')
 const MakeNew = ()=>import('@/components/StudyDesign/Create/MakeNew')
+
+const UseList = ()=>import('@/components/StudyDesign/Use/UseList')
 // 不知道路由
 const Unknow = ()=>import('@/components/StudyDesign/Create/Unknow')
 Vue.use(Router)
@@ -35,7 +37,7 @@ export default new Router({
       {
         path: '/uselist',
         name: '使用列表',
-        component: ClassifyList,
+        component: UseList,
       },
     ]
   },

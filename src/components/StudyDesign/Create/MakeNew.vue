@@ -17,7 +17,8 @@
                     <span @click='onAddComponent("标题")'>标题</span>
                 </div>
                 <sum-unit></sum-unit>
-                <!-- <task  :addtype='addType'></task> -->
+                <!--addtype为上面文字按钮的功能  -->
+                <task  :addtype='addType'></task>
 
             </div>
         </div>
@@ -100,12 +101,12 @@ export default {
                     "desc": "string",
                     "eId": 1,
                 }
-            this.$axios.post('/Task/create_task_group',
-                params
-            )
-            .then(res=>{
-                console.log('res=>',res);            
-            })
+                // this.$axios.post('/Task/create_task_group',
+                //     params
+                // )
+                // .then(res=>{
+                //     console.log('res=>',res);            
+                // })
         }
     },
 

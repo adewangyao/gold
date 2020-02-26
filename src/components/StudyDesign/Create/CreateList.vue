@@ -15,7 +15,7 @@
                         <span class="msg-tip">任务：18</span>
                         <span class="msg-tip">创建：王老师</span>
                         <span class="msg-tip">未共享</span>
-                        
+
                     </div>
                 </div>
                 <div class="item-right">
@@ -60,7 +60,7 @@ export default {
     data() {
         return {
             // btnVal:1,
-            dialogVisible:true,
+            dialogVisible:false,
             config1:{
                 width:'60px',
                 fsize:'18px'
@@ -110,7 +110,7 @@ export default {
 
     },
 
-    beforeCreate() { 
+    beforeCreate() {
 
     },
     created() {
@@ -123,7 +123,7 @@ export default {
         font-family: SourceHanSansCN-Regular;
         font-size: 16px;
         color: #FFFFFF;
-        letter-spacing: 0;    
+        letter-spacing: 0;
     }
     .search-box {
         display: inline-block;
@@ -169,7 +169,7 @@ export default {
         text-align: center;
     }
     .main {
-        margin-top: 16px;
+        margin-top: 20px;
     }
 /* 列表 */
     .item {
@@ -216,12 +216,12 @@ export default {
         border: 1px solid #CCD7EE ;
     }
     .more-btn{
-       animation: 0.5s opacity2 0s; 
+       animation: 0.5s opacity2 0s;
     }
     .down {
         background: #6B92F4 ;
         animation: 0.5s opacity 0s;
-        
+
     }
 
      @keyframes opacity2{
@@ -258,7 +258,7 @@ export default {
          margin-top: 8vh!important;
          height: 84% ;
          position: relative;
-         
+
     }
     /deep/ .el-dialog__body {
          height: 80%;
@@ -312,7 +312,7 @@ export default {
     }
     .catalog-x:hover {
         background: #8EB3FF;
-        
+
     }
     .catalog-btn {
         display: inline-block;

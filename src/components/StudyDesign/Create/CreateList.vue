@@ -95,11 +95,13 @@ export default {
             e.currentTarget.className="makeNewOver"
         },
         removeActiveNew(e){
+
             e.currentTarget.className="makeNew"
         },
         // 创建新任务
         onNewClick(){
-            this.$router.push('/makenew')
+            this.dialogVisible = true
+            // this.$router.push('/makenew')
         },
         onCatalogSure(){
             this.dialogVisible = false

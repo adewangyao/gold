@@ -62,14 +62,27 @@ export default {
     },
 
     methods: {
-
+      getCatalog(){
+        let params = {
+            periodId: 0,
+            subjectId: 0,
+            editionId: 0,
+            termId: 0,
+            bookId: 0,
+            uIdx: 0
+        }
+        this.$axios.post('/api/v1/Asset/catalog',params)
+        .then(res=>{
+            console.log('res=>',res);
+        })
+      }
     },
 
-    beforeCreate() { 
+    beforeCreate() {
 
     },
     created() {
-
+      this.getCatalog()
     },
 }
 </script>

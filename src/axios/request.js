@@ -9,7 +9,7 @@ const request = axios.create({
 request.interceptors.request.use(function (config) {
   if (config.url !== '/login') {   //设置请求头  签名
     // config.headers.Authorization = window.localStorage.getItem('token')
-    config.headers.Authorization = 'MkFCMzhDMjMzNDk4NEU5RjhBMTIxODBGNUQ0QTc1RA=='
+    config.headers.Authorization = 'Bearer MkFCMzhDMjMzNDk4NEU5RjhBMTIxODBGNUQ0QTc1RA=='
   }
   return config
 }, function (error) {

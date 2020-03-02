@@ -25,20 +25,33 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- 新建目录 -->
         <el-dialog
             :visible.sync="dialogVisible"
             custom-class=“new-dialog”
             width="1220px"
-            :before-close="handleClose">
-            <new-choice :config='config1'></new-choice>
+            >
+            <!-- <template v-for="(item,i) in catalogList"> -->
+                <new-choice @choice="choice" :config='config1' :list='catalogList[0]'></new-choice>
+                <new-choice @choice="choiceSub" :config='config1' :list='catalogList[1]'></new-choice>
+                <new-choice @choice="choiceVer" :list='catalogList[2]'></new-choice>
+                <new-choice @choice="choiceGrad" :list='catalogList[3]'></new-choice>
+                <new-choice @choice="choiceBook" :list='catalogList[4]'></new-choice>
+                <new-choice @choice="choiceUnit" :list='catalogList[5]'></new-choice>
+                <new-choice v-if="lastCataloglist.children.length" @choice="choiceLast" :list='lastCataloglist'></new-choice>
+                <!-- <new-choice @click="choice" :list='catalogList[6]'></new-choice> -->
+            <!-- </template> -->
             <span slot="footer" class="dialog-footer">
                 <div class="footer-catlog">
-                    <span class="catalog-span">wew</span>
-                    <span class="catalog-span">/</span>
-                    <span class="catalog-x">x</span>
+                    <template v-for="(item,i) in choiceName">
+                        <span :key="i" class="catalog-span">/{{item}}</span>
+                    </template>
+                    <span class="catalog-x" @click="onClearChoice">x</span>
                 </div>
                 <span class="catalog-btn" @click="onCatalogCancel">取消</span>
-                <span class="catalog-btn" @click="onCatalogSure">确认</span>
+                <span class="catalog-btn" @click="createDesign">确认</span>
             </span>
         </el-dialog>
     </div>
@@ -61,6 +74,18 @@ export default {
         return {
             // btnVal:1,
             dialogVisible:false,
+            catalogList:{}, //获取到的列表
+            lastCataloglist:{children:[]},//最后单元内部列表
+            lastVal:{}, ///最后单元内部选中信息
+            newParam:{
+                periodId: 0,
+                subjectId: 0,
+                editionId: 0,
+                termId: 0,
+                bookId: 0,
+                uIdx: 0               
+            },
+            choiceName:[],
             config1:{
                 width:'60px',
                 fsize:'18px'
@@ -80,11 +105,139 @@ export default {
         searchBtn(val){
             console.log(val)
         },
-        // 更多操作按钮
+    
+      // 清除所选
+        onClearChoice(){
+            this.choiceName = []
+            this.newParam={
+                periodId: 0,
+                subjectId: 0,
+                editionId: 0,
+                termId: 0,
+                bookId: 0,
+                uIdx: 0 
+            }
+            this.getCatalog()
+        },
+      // 选择科目
+        choiceSub(val){
+ 
+            this.newParam.subjectId = val.idx
+            this.getCatalog()
+        },
+      //学段
+        choice(val){
+            console.log(val)
+            this.newParam.periodId = val.idx
+            this.getCatalog()
+        },
+      // 版本
+        choiceVer(val){
+            this.newParam.editionId = val.idx
+            this.getCatalog()
+        },
+      // 年级
+        choiceGrad(val){
+            this.newParam.termId = val.idx
+            this.getCatalog()
+        },
+        choiceBook(val){
+            this.newParam.bookId = val.idx
+            this.getCatalog()
+        },
+      // 单元
+        choiceUnit(val){
+            this.newParam.uIdx = val.idx
+            this.getCatalog()
+        },
+        choiceLast(val){
+            this.lastVal.prop = ''
+            this.lastVal = val
+            if(this.choiceName.length==6){
+                this.choiceName.push(val.name)
+            }else if (this.choiceName.length==7){
+                this.choiceName.length = 6
+                console.log(this.choiceName)
+                console.log(this.choiceName)
+                this.choiceName.push(val.name)
+            }
+            
+        },
+      // 创建 
+        createDesign(){
+            let idinfo = this.newParam
+            let catid = `/${idinfo.periodId}/${idinfo.subjectId}/${idinfo.editionId}/${idinfo.termId}/${idinfo.bookId}/${idinfo.uIdx}`
+            let catName = ''
+            this.choiceName.forEach((item,i)=>{
+                if(i<6){
+                    catName = catName+'/'+item
+                }
+            })
+            console.log(catName,catid)
+            let param  = {
+                name:this.choiceName[this.choiceName.length-1],
+                catalog:catid,
+                catalogName:catName,
+                coverUrl:'',
+            }
+            this.sendRequest('/Desgin/create',param,(res)=>{
+
+            })
+
+        },
+      // 获取目录
+        getCatalog(){
+            // this.startLoading()
+            this.sendRequest('/Asset/catalog',this.newParam,(res)=>{
+                console.log(res)
+                // res = res.result
+                if(res.retcode==0){
+                    this.choiceName = []
+                    this.lastCataloglist.children = []
+                    this.catalogList=res.result[0]
+                    this.catalogList.forEach((item,i)=>{
+                        item.children.forEach((citem,ci)=>{
+                            if(citem.prop=='selected'){
+                                switch (i){
+                                    case 0: 
+                                        this.newParam.periodId = citem.idx
+                                        this.choiceName.push(citem.name)
+                                        break
+                                    case 1: 
+                                        this.newParam.subjectId = citem.idx
+                                        this.choiceName.push(citem.name)
+                                        break
+                                    case 2: 
+                                        this.newParam.editionId = citem.idx
+                                        this.choiceName.push(citem.name)
+                                        break
+                                    case 3: 
+                                        this.newParam.termId = citem.idx
+                                        this.choiceName.push(citem.name)
+                                        break
+                                    case 4: 
+                                        this.newParam.bookId = citem.idx
+                                        this.choiceName.push(citem.name)
+                                        break
+                                    case 5: 
+                                        this.newParam.uIdx = citem.idx
+                                        this.choiceName.push(citem.name)
+                                        this.lastCataloglist = citem
+                                        break
+
+                                }
+                            }
+                        })
+                    })
+                    console.log(this.choiceName)
+                }
+            })
+        },
+      // 更多操作按钮
         handleBtn(){
             this.btnVal = !this.btnVal
         },
-        // 操作按钮进入变色
+      // 操作按钮进入变色
         changeActiveDesign(e){
             e.currentTarget.className="designLibOver"
         },
@@ -98,9 +251,10 @@ export default {
 
             e.currentTarget.className="makeNew"
         },
-        // 创建新任务
+      // 创建新任务
         onNewClick(){
             this.dialogVisible = true
+            this.getCatalog()
             // this.$router.push('/makenew')
         },
         onCatalogSure(){
@@ -109,6 +263,7 @@ export default {
         onCatalogCancel(){
             this.dialogVisible = false
         }
+      // 
 
     },
 
@@ -116,7 +271,7 @@ export default {
 
     },
     created() {
-
+        // this.getCatalog()
     },
 }
 </script>
@@ -293,7 +448,7 @@ export default {
         color: #4F4F4F;
         letter-spacing: 0;
         display: inline-block;
-        max-width: 110px;
+        max-width: 210px;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap;

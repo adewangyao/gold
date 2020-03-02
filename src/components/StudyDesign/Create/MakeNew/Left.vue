@@ -2,8 +2,8 @@
 <template>
     <div class="left-box">
         <div class="top-btn">
-            <span class="task-group">建任务群</span>
-            <span class="task" @mouseenter.stop="changeActiveTask($event)" @mouseleave.stop="removeActiveTask($event)">创建任务</span>
+            <span class="task-group" @click="onCreateTaskGroup">建任务群</span>
+            <span class="task" @mouseenter.stop="changeActiveTask($event)" @mouseleave.stop="removeActiveTask($event)" @click="onCreateTask">创建任务</span>
         </div>
         <div class="list">
             <div class="list-item" @mouseenter="changeActiveItem($event)" @mouseleave="removeActiveItem($event)">
@@ -75,6 +75,35 @@ export default {
     },
 
     methods: {
+        // 创建任务群
+        onCreateTaskGroup(){
+            let param = {
+                title: "123",
+                content: "stri21321ng",
+                dsId: 8,
+                position: 0
+            }
+            this.sendRequest('/Task/create_task_group',param,res=>{
+
+                console.log(res)
+            })
+
+        },
+        // 创建任务
+        onCreateTask(){
+            let param = {
+                parentId: 0,
+                position: 0,
+                dsId: 8,
+                pattern: 1,
+                compeletedStd: 0
+            }
+            this.sendRequest('/Task/create_task',param,res=>{
+
+                console.log(res)
+            })
+
+        },
         changeActiveTask(e){
             e.currentTarget.className="task-over"
         },

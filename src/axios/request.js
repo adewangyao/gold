@@ -1,13 +1,14 @@
 import axios from 'axios'
 import router from '../router'
-
+import Vue from 'vue'
 const request = axios.create({
-  baseURL: 'https://123.122.234.85:5001/api/v1/'
+  baseURL: 'https://111.196.255.135:5001/api/v1'
 })
 
 // 请求拦截器
-request.interceptors.request.use(function (config) {
+request.interceptors.request.use( (config)=> {
   if (config.url !== '/login') {   //设置请求头  签名
+    Vue.prototype.startLoading()
     // config.headers.Authorization = window.localStorage.getItem('token')
     config.headers.Authorization = 'Bearer MkFCMzhDMjMzNDk4NEU5RjhBMTIxODBGNUQ0QTc1RA=='
   }
@@ -17,13 +18,15 @@ request.interceptors.request.use(function (config) {
 })
 
 // 响应拦截器
-// request.interceptors.response.use(function (response) {
-//   if (response.data.meta.status === 401) {
-//     router.replace('/login')
-//   }
-//   return response
-// }, function (error) {
-//   return Promise.reject(error)
-// })
+request.interceptors.response.use( (response)=> {
+  Vue.prototype.stopLoading()
+  // if (response.data.meta.status === 401) {
+    //   router.replace('/login')
+    // }
+    return response
+  }, function (error) {
+    Vue.prototype.stopLoading()
+  return Promise.reject(error)
+})
 
 export default request

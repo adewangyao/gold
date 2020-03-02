@@ -1,35 +1,8 @@
 <template>
-    <div class="choice-list" :style="{'width':config.width,'font-size':config.fsize}">
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>sd</div>
-        <div>2323   </div>
+<!-- 'width':config.width, -->
+    <div class="choice-list" :style="{'font-size':config.fsize}">
+        <div v-for="(item,i) in list.children" :key="i" :title="item.name" :class="{'selected':item.prop=='selected'}" @click="onItemClick(item)">{{item.name}}</div>
+
     </div>
 </template>
 
@@ -39,8 +12,12 @@
 export default {
     props:{
         config:{
-            type:String,
-            default:'',
+            type:Object,
+            default:function () { return {} },
+        },
+        list:{
+            type:Object,
+            default:function(){return {}}
         }
     },
     components: {
@@ -48,9 +25,10 @@ export default {
     },
 
     data() {
-    return {
-
-    };
+        return {
+            catalogList:{},
+            fontsize:this.config.fontsize||'16px',
+        };
     },
 
     computed: {
@@ -62,35 +40,29 @@ export default {
     },
 
     methods: {
-      getCatalog(){
-        let params = {
-            periodId: 0,
-            subjectId: 0,
-            editionId: 0,
-            termId: 0,
-            bookId: 0,
-            uIdx: 0
+        onItemClick(val){
+            val.prop = 'selected'
+            this.$emit('choice',val)
         }
-        this.$axios.post('/api/v1/Asset/catalog',params)
-        .then(res=>{
-            console.log('res=>',res);
-        })
-      }
     },
 
     beforeCreate() {
 
     },
     created() {
-      this.getCatalog()
+    //   this.getCatalog()
     },
 }
 </script>
 <style  scoped>
     .choice-list {
-        width: 40px;
+        /* width: 40px; */
         height: 100%;
+        float: left;
         overflow: auto;
+        border-right: 1px solid #EBEBEB ;
+        padding: 0 10px;
+        max-width: 220px;
     }
      .choice-list::-webkit-scrollbar {
         /*滚动条整体样式*/
@@ -111,9 +83,14 @@ export default {
         background   : #ededed;
     }
     .choice-list div{
+        margin-bottom: 6px;
         cursor: pointer;
         text-align: center;
         line-height: 30px;
+        padding: 0 6px;
+        overflow:hidden; 
+        text-overflow:ellipsis; 
+        white-space:nowrap;
     }
     .choice-list div:hover{
         background: #8EB3FF;

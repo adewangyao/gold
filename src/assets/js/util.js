@@ -223,11 +223,16 @@ export default {
         }
 
         Vue.prototype.startLoading = function() {
-            this.$store.commit('OPEN_LOADING')
+            Vue.prototype.loading = this.$loading({
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+              });
         }
 
         Vue.prototype.stopLoading = function() {
-            this.$store.commit('CLOSE_LOADING')
+            Vue.prototype.loading.close();
         }
 
         Vue.prototype.getRequestParamValue = function(name) {
@@ -603,108 +608,117 @@ export default {
             }
         }
 
+        // Vue.prototype.sendRequest = function(methodName, inputObj, handleFunc, target, next) {
+        //     if (this.isValid(inputObj)) {
+        //         var dataObj = {}
+
+        //         var session = this.getSession()
+        //         if (session != null)
+        //             Object.assign(dataObj, { "session": session })
+        //         else
+        //             Object.assign(dataObj, { "session": "" })
+        //         if (!this.isValidInt(inputObj.page, -1))
+        //             inputObj.page = 0
+
+        //         Object.assign(dataObj, inputObj)
+
+        //         var contentType = "application/x-www-form-urlencoded"
+        //         var dataType = "json"
+        //         g_ajaxIsRunning = true
+        //         if (!this.isValid(window.ajaxRandomArr)) {
+        //             window.ajaxRandomArr = []
+        //         }
+        //         window.ajaxRandomArr.push(Math.random())
+        //         axios({
+        //             url: methodName,
+        //             method: "post",
+        //             baseURL: this.getWSDomain(),
+        //             /*
+        //             transformRequest: [function(data) {
+
+        //                 return data
+        //             }],
+        //             transformResponse: [function(data) {
+
+        //             }],
+        //             */
+        //             /*//谨慎使用
+        //             headers: { 'Access-Control-Allow-Origin': '*' },
+        //             params: qs.stringify(dataObj),
+        //             paramsSerializer: function(params) {
+        //                 return qs.stringify(params, { arrarFormat: 'brackets' })
+        //             },
+        //             */
+        //             data: this.$qs.stringify(dataObj),
+        //             timeout: 0,
+        //             withCredentials: false,
+        //             /*//谨慎使用
+        //             adapter: function(config) {
+
+        //             },
+        //             */
+        //             auth: null, //谨慎使用
+        //             //responseType: dataType,   //谨慎使用
+        //             xsrfCookieName: 'XSRF-TOKEN',
+        //             xsrfHeaderName: 'X-XSRF-TOKEN',
+        //             //maxContentLength: 2000,
+        //             /*
+        //             validateStatus: function(status) { //研究一下
+        //                 return status >= 200 && status < 300
+        //             },
+        //             maxRedirects: 5,
+        //             httpAgent: new http.Agent({ keepAlive: true }),
+        //             httpsAgent: new https.Agent({ keepAlive: true }),
+        //             proxy: {
+        //                 host: 'ws.ckl.com',
+        //                 port: '80',
+        //                 auth: {}
+        //             },
+        //             cancelToken: new axios.CancelToken(function(cancel) {
+
+        //             })
+        //             */
+        //         }).then((response) => {
+        //             g_ajaxIsRunning = false
+        //             window.ajaxRandomArr.pop()
+        //             var d = response.data
+        //             if (this.isValid(d)) {
+        //                 var rc = this.getReturnCode(d)
+        //                 if (rc == 1) {
+        //                     var np = this.getResultNextPage(d)
+        //                     if (np > 0) {
+        //                         inputObj.page = np
+        //                         this.addToQueue(methodName, inputObj, handleFunc, target, true)
+        //                     }
+
+        //                     var result = this.getResultData(d)
+        //                     handleFunc(result, target, np)
+        //                         // need get more pages
+        //                 } else if (rc < 1) {
+        //                     // hide waiting msg
+        //                     // return error
+        //                     var result = this.getResultData(d)
+        //                     handleFunc(result, target, 0)
+        //                 }
+        //             } else {
+        //                 handleFunc(-1, target, 0)
+        //             }
+        //         }).catch(function(error) {
+        //             console.log(error)
+        //             g_ajaxIsRunning = false
+        //         })
+        //     }
+        // }
         Vue.prototype.sendRequest = function(methodName, inputObj, handleFunc, target, next) {
-            if (this.isValid(inputObj)) {
-                var dataObj = {}
-
-                var session = this.getSession()
-                if (session != null)
-                    Object.assign(dataObj, { "session": session })
-                else
-                    Object.assign(dataObj, { "session": "" })
-                if (!this.isValidInt(inputObj.page, -1))
-                    inputObj.page = 0
-
-                Object.assign(dataObj, inputObj)
-
-                var contentType = "application/x-www-form-urlencoded"
-                var dataType = "json"
-                g_ajaxIsRunning = true
-                if (!this.isValid(window.ajaxRandomArr)) {
-                    window.ajaxRandomArr = []
-                }
-                window.ajaxRandomArr.push(Math.random())
-                axios({
-                    url: methodName,
-                    method: "post",
-                    baseURL: this.getWSDomain(),
-                    /*
-                    transformRequest: [function(data) {
-
-                        return data
-                    }],
-                    transformResponse: [function(data) {
-
-                    }],
-                    */
-                    /*//谨慎使用
-                    headers: { 'Access-Control-Allow-Origin': '*' },
-                    params: qs.stringify(dataObj),
-                    paramsSerializer: function(params) {
-                        return qs.stringify(params, { arrarFormat: 'brackets' })
-                    },
-                    */
-                    data: this.$qs.stringify(dataObj),
-                    timeout: 0,
-                    withCredentials: false,
-                    /*//谨慎使用
-                    adapter: function(config) {
-
-                    },
-                    */
-                    auth: null, //谨慎使用
-                    //responseType: dataType,   //谨慎使用
-                    xsrfCookieName: 'XSRF-TOKEN',
-                    xsrfHeaderName: 'X-XSRF-TOKEN',
-                    //maxContentLength: 2000,
-                    /*
-                    validateStatus: function(status) { //研究一下
-                        return status >= 200 && status < 300
-                    },
-                    maxRedirects: 5,
-                    httpAgent: new http.Agent({ keepAlive: true }),
-                    httpsAgent: new https.Agent({ keepAlive: true }),
-                    proxy: {
-                        host: 'ws.ckl.com',
-                        port: '80',
-                        auth: {}
-                    },
-                    cancelToken: new axios.CancelToken(function(cancel) {
-
-                    })
-                    */
-                }).then((response) => {
-                    g_ajaxIsRunning = false
-                    window.ajaxRandomArr.pop()
-                    var d = response.data
-                    if (this.isValid(d)) {
-                        var rc = this.getReturnCode(d)
-                        if (rc == 1) {
-                            var np = this.getResultNextPage(d)
-                            if (np > 0) {
-                                inputObj.page = np
-                                this.addToQueue(methodName, inputObj, handleFunc, target, true)
-                            }
-
-                            var result = this.getResultData(d)
-                            handleFunc(result, target, np)
-                                // need get more pages
-                        } else if (rc < 1) {
-                            // hide waiting msg
-                            // return error
-                            var result = this.getResultData(d)
-                            handleFunc(result, target, 0)
-                        }
-                    } else {
-                        handleFunc(-1, target, 0)
-                    }
-                }).catch(function(error) {
-                    console.log(error)
-                    g_ajaxIsRunning = false
-                })
-            }
+            this.$axios.post(methodName,inputObj)
+            .then(res=>{
+                res = res.data
+                handleFunc(res)
+                // this.stopLoading()
+            })
         }
 
+        
         Vue.prototype.getNavList = function(callback) {
             let hostName = window.location.hostname
             let account = this.loadAccount()

@@ -114,7 +114,6 @@ export default {
 
     },
     created() {
-        console.log(this.$axios)
         this.testRequest()
     },
 }

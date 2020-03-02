@@ -3,10 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import util from './assets/js/util.js'
 import axios from './axios/request'
 import $ from "jquery"
 // 从pass项目拷贝的工具
-import util from './assets/js/util.js'
 
 // 引入element
 import ElementUI from 'element-ui'

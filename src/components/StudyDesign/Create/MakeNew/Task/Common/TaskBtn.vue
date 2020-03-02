@@ -36,7 +36,7 @@ methods: {
     }
 },
 
-beforeCreate() { 
+beforeCreate() {
 
 },
 created() {
@@ -44,11 +44,11 @@ created() {
 },
 }
 </script>
-<style  scoped> 
+<style  scoped>
     .task-btn {
         float: right;
         margin-right: 28px;
-        line-height: 40px;  
+        line-height: 40px;
         /* display: inline-block; */
 
     }
@@ -61,32 +61,32 @@ created() {
         margin-left: 16px;
     }
     .task-btn-del {
-         background-image: url('/static/image/btn_移动.png');
+         background-image: url('/static/image/btn_move.png');
         background-position: 0px 0px;
         transition: background-image 2s ease-in
     }
     .task-btn-del:hover {
-         background-image: url('/static/image/btn_移动.png');
+         background-image: url('/static/image/btn_move.png');
         background-position: 0px 19px;
         transition:  background-image 0.2s ease-in
     }
     .task-btn-up {
-         background-image: url('/static/image/btn_移动.png');
+         background-image: url('/static/image/btn_move.png');
         background-position: 38px 0px;
-        transition:  background-image 0.2s ease-in        
+        transition:  background-image 0.2s ease-in
     }
     .task-btn-up:hover {
-         background-image: url('/static/image/btn_移动.png');
+         background-image: url('/static/image/btn_move.png');
         background-position: 38px 19px;
         transition:  background-image 0.2s ease-in
     }
     .task-btn-down {
-         background-image: url('/static/image/btn_移动.png');
+         background-image: url('/static/image/btn_move.png');
         background-position: 76px 0px;
         transition:  background-image 0.2s ease-in
     }
     .task-btn-down:hover {
-         background-image: url('/static/image/btn_移动.png');
+         background-image: url('/static/image/btn_move.png');
         background-position: 76px 19px;
         transition:  background-image 0.2s ease-in
     }

@@ -7,7 +7,7 @@
             clearable
             v-model="value">
             <span slot="suffix" class="search-btn" v-if="!value">
-                <img  src="/static/image/btn_搜索.png">
+                <img  src="/static/image/btn_search.png">
             </span>
         </el-input>
     </div>
@@ -20,7 +20,7 @@ export default {
 
 name: "search",
 components: {
-    
+
 },
 
 data() {
@@ -44,7 +44,7 @@ methods: {
     }
 },
 
-beforeCreate() { 
+beforeCreate() {
 
 },
 created() {

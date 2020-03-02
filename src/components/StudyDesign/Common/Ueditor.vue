@@ -25,15 +25,15 @@ export default {
             });
         },
         getUEContent() {
-            // let content = this.editor.getContent()
-            // let contentTxt = this.editor.getContentTxt()
-            // let data = {
-            //     html: content,
-            //     html_original: content,
-            //     content: contentTxt
-            // }
-            // return data
-            // this.$emit('SetJsonRichText',data)
+            let content = this.editor.getContent()
+            let contentTxt = this.editor.getContentTxt()
+            let data = {
+                html: content,
+                html_original: content,
+                content: contentTxt
+            }
+            return data
+            this.$emit('SetJsonRichText',data)
         }
     },
     created(){

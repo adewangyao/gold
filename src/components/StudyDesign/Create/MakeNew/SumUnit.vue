@@ -6,35 +6,30 @@
       <el-input
           @input='handleChange'
           placeholder=""
-          clearable
+
           v-model="value">
       </el-input>
-      <span class="save">保存</span>
+      <span class="save" @click="saveTitle">保存</span>
     </div>
     <div class="textarea">
-      <el-input
-        type="textarea"
-        :rows="24"
-        placeholder="请输入内容"
-        v-model="textarea">
-      </el-input>
+      <rich-text :initInn='initInn' @getContent="getContent" ref="rt"></rich-text>
     </div>
   </div>
 </template>
 
 <script>
 
-
+import RichText from "./Task/RichText"
 export default {
 
 components: {
-
+  RichText
 },
 
 data() {
   return {
-    value:'',
-    textarea:'',
+    value:'新建任务组',
+    initInn:'<a>sas</a>'
   };
 },
 
@@ -47,10 +42,29 @@ watch: {
 },
 
 methods: {
+  // 获取富文本内容
+  getContent(val){
+    this.initInn = this.$refs.rt.getContent()
+    alert(this.initInn)
+  },
+  saveTitle(){
+    this.getContent()
+    let param = {
+      title: this.value,
+      content: this.initInn,
+      dsId: 1,
+      position: 0
+    }
+    this.sendRequest('/Task/create_task_group',param,(res)=>{
+      console.log(res)
+      if(res.retcode==0&&res.result.length){
+      }
+    })
+  },
   handleChange(){}
 },
 
-beforeCreate() { 
+beforeCreate() {
 
 },
 created() {

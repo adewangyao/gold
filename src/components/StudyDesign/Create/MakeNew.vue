@@ -16,9 +16,9 @@
                     <span @click='onAddComponent("文字")'>文字</span>
                     <span @click='onAddComponent("标题")'>标题</span>
                 </div>
-                <sum-unit></sum-unit>
+                <sum-unit v-if="choiceType=='tasekGroupTitle'"></sum-unit>
                 <!--addtype为上面文字按钮的功能  -->
-                <task  :addtype='addType'></task>
+                <!-- <task  :addtype='addType'></task> -->
 
             </div>
         </div>
@@ -42,14 +42,17 @@ export default {
     },
 
     data() {
-        return {    
-            addType:''  //添加的组件名称
+        return {
+            addType:'',  //添加的组件名称
+            // choiceType:this.$store.state.choiceType,
 
         };
     },
 
     computed: {
-
+      choiceType(){
+        return this.$store.state.choiceType
+        }
     },
 
     watch: {
@@ -105,12 +108,12 @@ export default {
                 //     params
                 // )
                 // .then(res=>{
-                //     console.log('res=>',res);            
+                //     console.log('res=>',res);
                 // })
         }
     },
 
-    beforeCreate() { 
+    beforeCreate() {
 
     },
     created() {

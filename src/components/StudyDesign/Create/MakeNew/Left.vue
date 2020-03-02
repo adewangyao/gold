@@ -6,7 +6,8 @@
             <span class="task" @mouseenter.stop="changeActiveTask($event)" @mouseleave.stop="removeActiveTask($event)" @click="onCreateTask">创建任务</span>
         </div>
         <div class="list">
-            <div class="list-item" @mouseenter="changeActiveItem($event)" @mouseleave="removeActiveItem($event)">
+            <!-- <div class="list-item" @mouseenter="changeActiveItem($event)" @mouseleave="removeActiveItem($event)"> -->
+            <div class="list-item">
                 <!-- 名称 -->
                 <div class="item-until">
                     <span class="tip1"></span>
@@ -75,45 +76,35 @@ export default {
     },
 
     methods: {
-        // 创建任务群
-        onCreateTaskGroup(){
-            let param = {
-                title: "123",
-                content: "stri21321ng",
-                dsId: 8,
-                position: 0
-            }
-            this.sendRequest('/Task/create_task_group',param,res=>{
-
-                console.log(res)
-            })
-
-        },
-        // 创建任务
-        onCreateTask(){
-            let param = {
-                parentId: 0,
-                position: 0,
-                dsId: 8,
-                pattern: 1,
-                compeletedStd: 0
-            }
-            this.sendRequest('/Task/create_task',param,res=>{
-
-                console.log(res)
-            })
-
-        },
         changeActiveTask(e){
             e.currentTarget.className="task-over"
         },
         removeActiveTask(e){
             e.currentTarget.className="task"
         },
+        // 创建任务群
+        onCreateTaskGroup(){
+          this.$store.commit('changeType','tasekGroupTitle')
+          console.log(this.$store.state.choiceType)
+          return
+
+        },
+        // 创建任务
+        onCreateTask(){
+          let param = {
+            title: "新建任务",
+            content: "string",
+            dsId: 1,
+            position: 0
+          }
+          this.sendRequest('/Task/create_task_group',param,(res)=>{
+            console.log(res)
+          })
+        },
 
     },
 
-    beforeCreate() { 
+    beforeCreate() {
 
     },
     created() {
@@ -125,7 +116,7 @@ export default {
     .left-box {
        width: 350px;
        height: 90%;
-       background: #FCFCFC; 
+       background: #FCFCFC;
        box-sizing: border-box;
        padding-top: 12px;
        padding-left:20px;
@@ -149,11 +140,11 @@ export default {
     }
     .task {
         background: #EAEAEA;
-        color: #4F4F4F;  
+        color: #4F4F4F;
     }
     .task-over {
         background: #6B92F4;
-        color: #fff;  
+        color: #fff;
     }
     .list-item {
         margin-top: 12px;
@@ -198,7 +189,7 @@ export default {
         background: #FFFFFF;
         box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
         border-radius: 2px;
-        border-radius: 2px;       
+        border-radius: 2px;
         background: #6B92F4;
     }
     .selected {
@@ -209,7 +200,7 @@ export default {
         background: #FFFFFF;
         box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
         border-radius: 2px;
-        border-radius: 2px;       
+        border-radius: 2px;
         background: #6B92F4;
     }
     .color {
@@ -222,7 +213,7 @@ export default {
         width: 312px;
         height: 40px;
         line-height: 40px;
-        box-sizing: border-box;  
+        box-sizing: border-box;
         font-size: 16px;
         color: #4F4F4F;
         letter-spacing: 0;
@@ -234,11 +225,11 @@ export default {
         width: 312px;
         height: 40px;
         line-height: 40px;
-        box-sizing: border-box;  
+        box-sizing: border-box;
         font-size: 16px;
         color: #4F4F4F;
         letter-spacing: 0;
-    }    
+    }
     /* 操作按钮样式 */
     .handle-btn{
         position: absolute;
@@ -247,24 +238,40 @@ export default {
     }
     .handle-btn>span{
         margin-left: 8px;
-        display: inline-block;    
+        display: inline-block;
         width: 19px;
-        height: 19px;    
+        height: 19px;
     }
     .btn-add {
-        background:url('/static/image/btn_新建.png') no-repeat ;
+        background:url('/static/image/btn_new.png') no-repeat ;
         background-position: 0px 0px;
     }
+    .btn-add:hover {
+        background:url('/static/image/btn_new.png') no-repeat ;
+        background-position: 0px -19px;
+    }
     .btn-reduce {
-        background:url('/static/image/btn_新建.png') no-repeat ;
+        background:url('/static/image/btn_new.png') no-repeat ;
         background-position: -19px 0px;
     }
     .btn-up {
-        background:url('/static/image/btn_新建.png') no-repeat ;
+        background:url('/static/image/btn_new.png') no-repeat ;
         background-position: -38px 0px;
     }
     .btn-down {
-        background:url('/static/image/btn_新建.png') no-repeat ;
+        background:url('/static/image/btn_new.png') no-repeat ;
         background-position: -57px 0px;
+    }
+    .btn-reduce:hover {
+        background:url('/static/image/btn_new.png') no-repeat ;
+        background-position: -19px -19px;
+    }
+    .btn-up:hover {
+        background:url('/static/image/btn_new.png') no-repeat ;
+        background-position: -38px -19px;
+    }
+    .btn-down:hover {
+        background:url('/static/image/btn_new.png') no-repeat ;
+        background-position: -57px -19px;
     }
 </style>

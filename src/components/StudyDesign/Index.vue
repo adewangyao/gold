@@ -10,29 +10,29 @@
 
               <el-menu-item index="/createlist">
                 <span class="icon">
-                  <img class="icon11" v-if="menuVal=='/createlist'" src="/static/image/icon_左侧导航.png">
-                  <img class="icon1" v-else src="/static/image/icon_左侧导航.png">
+                  <img class="icon11" v-if="menuVal=='/createlist'" src="/static/image/icon_leftnav.png">
+                  <img class="icon1" v-else src="/static/image/icon_leftnav.png">
                 </span>
                 <span slot="title">设计创建</span>
               </el-menu-item>
               <el-menu-item index="/classifylist" >
                 <span class="icon">
-                  <img class="icon22" v-if="menuVal=='/classifylist'" src="/static/image/icon_左侧导航.png">
-                  <img class="icon2"  v-else src="/static/image/icon_左侧导航.png">
+                  <img class="icon22" v-if="menuVal=='/classifylist'" src="/static/image/icon_leftnav.png">
+                  <img class="icon2"  v-else src="/static/image/icon_leftnav.png">
                 </span>
                 <span slot="title">设计分类</span>
               </el-menu-item>
               <el-menu-item index="/sharelist">
                 <span class="icon">
-                  <img class="icon33" v-if="menuVal=='/sharelist'" src="/static/image/icon_左侧导航.png">
-                  <img class="icon3"  v-else src="/static/image/icon_左侧导航.png">
+                  <img class="icon33" v-if="menuVal=='/sharelist'" src="/static/image/icon_leftnav.png">
+                  <img class="icon3"  v-else src="/static/image/icon_leftnav.png">
                 </span>
                 <span slot="title">设计分享</span>
               </el-menu-item>
               <el-menu-item index="/uselist">
                   <span class="icon">
-                  <img class="icon44" v-if="menuVal=='/uselist'" src="/static/image/icon_左侧导航.png">
-                  <img class="icon4"  v-else src="/static/image/icon_左侧导航.png">
+                  <img class="icon44" v-if="menuVal=='/uselist'" src="/static/image/icon_leftnav.png">
+                  <img class="icon4"  v-else src="/static/image/icon_leftnav.png">
                 </span>
                 <span slot="title">设计使用</span>
               </el-menu-item>
@@ -76,7 +76,7 @@ export default {
     },
   },
 
-beforeCreate() { 
+beforeCreate() {
 
 },
 created() {
@@ -106,37 +106,37 @@ created() {
   }
   .aside {
     background: #ccc;
-    padding-top:10px; 
+    padding-top:10px;
     height: 100%;
   }
   .box {
     height: 100%;
   }
-  .icon1 {  
+  .icon1 {
     left: -5px;
   }
-  .icon2 {  
+  .icon2 {
     left: -38px;
   }
-  .icon3 {  
+  .icon3 {
     left: -68px;
   }
-  .icon4 {  
+  .icon4 {
     left: -102px;
   }
-  .icon11 {  
+  .icon11 {
     top: -37px!important;
     left: -5px;
   }
-  .icon22 { 
+  .icon22 {
     top: -37px!important;
     left: -38px;
   }
-  .icon33 {  
+  .icon33 {
     top: -37px!important;
     left: -68px;
   }
-  .icon44 {  
+  .icon44 {
     top: -37px!important;
     left: -102px;
   }

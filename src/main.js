@@ -6,7 +6,9 @@ import router from './router'
 import util from './assets/js/util.js'
 import axios from './axios/request'
 import $ from "jquery"
+import store from './vuex/store'
 // 从pass项目拷贝的工具
+
 
 // 引入element
 import ElementUI from 'element-ui'
@@ -19,6 +21,7 @@ Vue.prototype.$axios = axios;
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

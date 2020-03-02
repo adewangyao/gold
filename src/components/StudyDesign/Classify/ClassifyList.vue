@@ -14,10 +14,10 @@
         <div class="main">
             <div class="item">
                 <span class="bookmark">
-                    <img  class="bookcolor" src="/static/image/书签.png" alt="">
+                    <img  class="bookcolor" src="/static/image/bookmarks.png" alt="">
                 </span>
-                <span class="item-title">2019年下半年语文阅读学习计划</span> 
-                <span class="item-time">2018-01-06</span> 
+                <span class="item-title">2019年下半年语文阅读学习计划</span>
+                <span class="item-time">2018-01-06</span>
                 <span class="item-btn">
                     <span class="rename">重命名</span>
                     <span class="del">删除</span>
@@ -26,10 +26,10 @@
             <div class="item">
                 <span class="bookmark">
                     <!-- b不同颜色根据i值用8除余数乘-8 -->
-                    <img  class="bookcolor" src="/static/image/书签.png" alt="" style="margin-left:-8px">
+                    <img  class="bookcolor" src="/static/image/bookmarks.png" alt="" style="margin-left:-8px">
                 </span>
-                <span class="item-title">2019年下半年语文阅读学习计划</span> 
-                <span class="item-time">2018-01-06</span> 
+                <span class="item-title">2019年下半年语文阅读学习计划</span>
+                <span class="item-time">2018-01-06</span>
                 <span class="item-btn">
                     <span class="rename">重命名</span>
                     <span class="del">删除</span>
@@ -75,7 +75,7 @@ export default {
         },
     },
 
-    beforeCreate() { 
+    beforeCreate() {
 
     },
     created() {

@@ -5,10 +5,10 @@
         <div class="top-box">
             <!-- 顶部左 -->
             <div class="top-left">
-                <span  @mouseenter="changeActiveBack($event)" @mouseleave="removeActiveBack($event)">
+                <span  @mouseenter="changeActiveBack($event)" @mouseleave="removeActiveBack($event)" @click="onBackClick">
                     <span  class="back-img" ></span>
                 </span>
-                <span @mouseenter.stop="changeActiveChange($event)" @mouseleave.stop="removeActiveChange($event)">
+                <span @mouseenter.stop="changeActiveChange($event)" @mouseleave.stop="removeActiveChange($event)" @click="onCatalogClick">
                     <span class="change-img"></span>
                 </span>
 
@@ -39,21 +39,24 @@
                 </span>
             </div>
         </div>
+        <!-- 目录弹框 -->
+        <new-catalog :isVisible='dialogVisible' @closeDialog='closeDialog'></new-catalog>
     </div>
 </template>
 
 <script>
 
-
+import NewCatalog from '../Common/NewCatalog'
 export default {
 
     components: {
-
+      NewCatalog,
     },
 
     data() {
         return {
             value:"",
+             dialogVisible:false,
         };
     },
 
@@ -66,12 +69,24 @@ export default {
     },
 
     methods: {
-        // 搜索
+      // 关闭弹框
+        closeDialog(){
+          this.dialogVisible = false
+        },
+      //点击目录
+        onCatalogClick(){
+          this.dialogVisible = true
+        },
+      // 搜索
         handleChange(val){
             this.$emit('searchBtn',val)
 
         },
-        // 按钮状态处理
+      // 返回按钮
+        onBackClick(){
+          this.$router.go(-1)
+        },
+      // 按钮状态处理
         changeActiveBack(e){
             e.currentTarget.className="mouseOner"
             e.target.children[0].className='back-img-over'
@@ -92,11 +107,11 @@ export default {
 
         changeActiveImg(e){
             e.currentTarget.className="mouseOner"
-            e.target.children[0].className='img-img-over'           
+            e.target.children[0].className='img-img-over'
         },
         removeActiveImg(e){
             e.currentTarget.className=""
-            e.target.children[0].className='img-img'            
+            e.target.children[0].className='img-img'
         },
         // youce
         changeActivePre(e){
@@ -119,15 +134,15 @@ export default {
 
         changeActiveRel(e){
             e.currentTarget.className="mouseOner"
-            e.target.children[0].className='release-img-over'           
+            e.target.children[0].className='release-img-over'
         },
         removeActiveRel(e){
             e.currentTarget.className=""
-            e.target.children[0].className='release-img'            
+            e.target.children[0].className='release-img'
         },
     },
 
-    beforeCreate() { 
+    beforeCreate() {
 
     },
     created() {
@@ -136,7 +151,7 @@ export default {
 }
 </script>
 <style  scoped>
-    img{border:0} 
+    img{border:0}
     .top-box{
         display: flex;
         justify-content: space-between;
@@ -166,7 +181,7 @@ export default {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
 
 
     }
@@ -174,36 +189,36 @@ export default {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
         background-position: 0px -34px;
     }
     .change-img {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
         background-position: -36px 0px;
     }
     .change-img-over {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
         background-position: -36px -34px;
     }
     .img-img {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
-        background-position: -68px 0px;   
+        background:  url('/static/image/btn_create.png') no-repeat ;
+        background-position: -68px 0px;
     }
     .img-img-over {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
-        background-position: -68px -34px;     
+        background:  url('/static/image/btn_create.png') no-repeat ;
+        background-position: -68px -34px;
     }
     /* 右侧 */
     .top-right>span{
@@ -226,43 +241,43 @@ export default {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
         background-position: -102px 0px;
     }
     .pre-img-over {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
         background-position: -102px -34px;
     }
     .export-img {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
         background-position: -138px 0px;
     }
     .export-img-over {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
+        background:  url('/static/image/btn_create.png') no-repeat ;
         background-position: -138px -34px;
     }
     .release-img {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
-        background-position: -172px 0px;    
+        background:  url('/static/image/btn_create.png') no-repeat ;
+        background-position: -172px 0px;
     }
     .release-img-over {
         display: inline-block;
         width: 30px;
         height: 32px;
-        background:  url('/static/image/btn_创建.png') no-repeat ;
-        background-position: -172px -34px;   
+        background:  url('/static/image/btn_create.png') no-repeat ;
+        background-position: -172px -34px;
     }
 
     .top-center >>> .el-input{

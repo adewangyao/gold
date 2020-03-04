@@ -155,7 +155,24 @@ export default {
                 coverUrl:'',
             }
             this.sendRequest('/Desgin/create',param,(res)=>{
-
+              if(res.retcode==0){
+                this.dialogVisible=false
+                this.$notify({
+                  // title: '创建成功',
+                  message: '创建成功',
+                  type: 'success',
+                  duration:1000,
+                });
+                // t通知已经创建成功
+                // this.$emit('creatSuccess')
+                this.$store.commit('changeCreate','createSuccess')
+              }else{
+                  this.$notify.error({
+                    // title: '创建失败',
+                    message: '创建成功',
+                    duration:1000,
+                  });
+              }
             })
 
         },

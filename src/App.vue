@@ -25,4 +25,7 @@ html {
   width: 1280px;
   margin: 0 auto;
 }
+html /deep/ .el-notification__content{
+  margin: 0;
+}
 </style>

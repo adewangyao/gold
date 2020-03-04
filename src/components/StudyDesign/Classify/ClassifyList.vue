@@ -9,7 +9,7 @@
                 <img src="/static/image/leftarrow.png" alt="">
             </span>
             <search @searchBtn='searchBtn' class="search-box"></search>
-            <span class="make-new" @mouseover='onMouseOver($event)'  @mouseout="removeActive($event)">新建分类</span>
+            <span class="make-new" @mouseover='onMouseOver($event)'  @mouseout="removeActive($event)" @click="newClassify">新建分类</span>
         </div>
         <div class="main">
             <div class="item">
@@ -36,21 +36,25 @@
                 </span>
             </div>
         </div>
+        <classify-dialog :isVisable='isVisable' @closeDialog='handleClose'></classify-dialog>
     </div>
 </template>
 
 <script>
 
 import search from '../Common/Search'
+import ClassifyDialog from './Common/ClassifyDialog'
 export default {
 
     components: {
         search,
+        ClassifyDialog,
     },
 
     data() {
     return {
-        btnColor:0
+        btnColor:0,
+        isVisable:false,
     };
     },
 
@@ -73,6 +77,14 @@ export default {
         removeActive(e){
             e.currentTarget.className="make-new"
         },
+        // 关闭弹框
+        handleClose(){
+          this.isVisable = false
+        },
+        // 新建分类
+        newClassify(){
+          this.isVisable = true
+        }
     },
 
     beforeCreate() {

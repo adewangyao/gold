@@ -6,14 +6,14 @@
             <div class="designLib" @mouseover="changeActiveDesign($event)" @mouseout="removeActiveDesign($event)">设计库</div>
             <div class="makeNew" @mouseover="changeActiveNew($event)" @mouseout="removeActiveNew($event)" @click="onNewClick">新建</div>
         </div>
-        <div class="main">
-            <div class="item">
-                <div class="item-left">
-                    <div class="item-title">第一单元处识鲁迅学习设计</div>
+        <div class="main"  v-infinite-scroll="load" style="overflow:auto" infinite-scroll-distance=40 >
+            <div class="item" v-for="(item,i) in itemList" :key="i" >
+                <div class="item-left" >
+                    <div class="item-title">{{item.name}}</div>
                     <div class="item-msg">
-                        <span class="msg-tip">2020-02-18</span>
-                        <span class="msg-tip">任务：18</span>
-                        <span class="msg-tip">创建：王老师</span>
+                        <span class="msg-tip">{{item.creationTime.substring(0,10)}}</span>
+                        <span class="msg-tip">任务：{{item.taskCount}}</span>
+                        <span class="msg-tip">创建：{{item.creatorName}}</span>
                         <span class="msg-tip">未共享</span>
 
                     </div>
@@ -46,7 +46,9 @@ export default {
         NewChoice,
         NewCatalog,
     },
-
+    props:{
+      itemList:Array
+    },
     data() {
         return {
             // btnVal:1,
@@ -64,6 +66,10 @@ export default {
     },
 
     methods: {
+      // 滚动加载
+        load(){
+          this.$emit('pageChange')
+        },
       // 关闭弹框
         closeDialog(){
           this.dialogVisible = false
@@ -159,6 +165,7 @@ export default {
     }
     .main {
         margin-top: 20px;
+        height: 50%;
     }
 /* 列表 */
     .item {
@@ -213,25 +220,6 @@ export default {
 
     }
 
-    /deep/ .el-dialog {
-         margin-top: 8vh!important;
-         height: 84% ;
-         position: relative;
 
-    }
-    /deep/ .el-dialog__body {
-         height: 80%;
-         padding-bottom: 10px;
-         padding-top: 10px;
-
-    }
-    /deep/ .el-dialog__footer {
-         height: 12%;
-         background: #F7F7F7;
-         position: relative;
-         text-align: left;
-         /* padding-bottom: 0; */
-
-    }
 
 </style>

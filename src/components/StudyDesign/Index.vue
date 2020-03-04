@@ -39,7 +39,7 @@
             </el-menu>
           </el-aside>
           <el-main>
-            <router-view></router-view>
+            <router-view :itemList='itemList' @pageChange='pageChange'></router-view>
           </el-main>
         </el-container>
     </div>
@@ -57,32 +57,81 @@ export default {
   data() {
     return {
       menuVal:'/createlist',
+      itemList:[],
+      pageIndex:1,  //翻页
+      pageSize:10,
     };
   },
 
   computed: {
-
+    createType(){
+      return   this.$store.state.createDesign
+    }
   },
 
   watch: {
-
+    createType(nVal,oVak){
+      alert(222)
+      if(nVal=='createSuccess'){
+        this.getDesignList()
+        this.$store.commit('changeCreate','')
+      }
+    }
   },
 
   methods: {
+    // 滚动加载
+    pageChange(){
+      // this.pageIndex++
+      this.pageSize += 10
+      this.getDesignList()
+    },
     // 切换菜单
     onHandleSelect(val){
+      this.pageIndex = 1
       this.menuVal = val
       this.$router.push(val)
+      this.getDesignList()
     },
+    getDesignList(){
+      let sortVal = ''
+      return
+      console.log(this.menuVal)
+      switch (this.menuVal){
+        case '\/createlist':
+          sortVal = 1
+          break
+        case '\/classifylist':
+          sortVal = 2
+          break
+        case '\/sharelist':
+          sortVal = 4
+          break
+        case '\/uselist':
+          sortVal = 8
+          break
+      }
+      let param = {
+        keyword: '',
+        status: 0,
+        sort: sortVal,  // 1= 创建 2 = 分类 4 = 分享 8 = 使用 
+        pageIndex: this.pageIndex,
+        pageSize:this.pageSize,
+      }
+      this.sendRequest('/Query/design',param,res=>{
+        console.log(res)
+        this.itemList = res.result[0].items
+        console.log(this.itemList)
+      })
+    }
   },
 
 beforeCreate() {
 
 },
 created() {
-  console.log(this.$route.path)
   this.menuVal = this.$route.path
-  console.log(this.$route.path)
+  this.getDesignList()
 },
 }
 </script>
@@ -110,7 +159,7 @@ created() {
     height: 100%;
   }
   .box {
-    height: 100%;
+    height: 94%;
   }
   .icon1 {
     left: -5px;

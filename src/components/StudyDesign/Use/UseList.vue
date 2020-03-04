@@ -19,13 +19,13 @@
       </div>
       <!-- 内容区域 -->
       <div class="use-inn">
-        <div class="use-inn-item">
+        <div class="use-inn-item" v-for="(item,i) in itemList" :key="i">
           <div class="item-left">
-            <div class="item-title">第一单元初识鲁迅学习设计</div>
+            <div class="item-title">{{item.name}}</div>
             <div class="item-tips">
-              <span>2020-01-06</span>
-              <span>任务：18</span>
-              <span>创建：王老师</span>
+              <span>{{item.creationTime.substring(0,10)}}</span>
+              <span>任务：{{item.taskCount}}</span>
+              <span>创建：{{item.creatorName}}</span>
               <span>未共享</span>
             </div>
           </div>
@@ -37,24 +37,7 @@
             <span>授课</span>
           </div>
         </div>
-        <div class="use-inn-item">
-          <div class="item-left">
-            <div class="item-title">第一单元初识鲁迅学习设计</div>
-            <div class="item-tips">
-              <span>2020-01-06</span>
-              <span>任务：18</span>
-              <span>创建：王老师</span>
-              <span>未共享</span>
-            </div>
-          </div>
 
-          <div class="item-right">
-            <span>编辑</span>
-            <span>对象</span>
-            <span>归档</span>
-            <span>授课</span>
-          </div>
-        </div>
       </div>
   </div>
 </template>
@@ -67,7 +50,9 @@ export default {
     components: {
         search,
     },
-
+    props:{
+      itemList:Array
+    },
   data() {
     return {
       isScreen:0,
@@ -110,6 +95,14 @@ export default {
     .search-box {
         display: inline-block;
     }
+    .search-box /deep/ .el-input{
+        width:938px!important;
+        /* height: 32px; */
+    }
+    .search-box /deep/ input{
+        width:948px!important;
+        /* height: 32px; */
+    }
     .screen-btn {
       display: inline-block;
       width: 144px;
@@ -139,6 +132,7 @@ export default {
       display: inline-block;
     }
     .screen-inn{
+      z-index: 10;
       position: absolute;
       background: #FFFFFF;
       border: 1px solid rgba(107,146,244,.3);
@@ -180,6 +174,7 @@ export default {
       padding: 20px 20px 16px 20px;
       height: 80px;
       box-sizing: border-box;
+      position: relative;
       border-bottom: 1px solid #eaecee;
     }
 
@@ -200,7 +195,7 @@ export default {
     .item-right {
       position: absolute;
       right: 20px;
-      top: 42%;
+      top: 32%;
     }
     .item-right span{
       display: inline-block;

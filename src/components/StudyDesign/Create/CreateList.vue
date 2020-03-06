@@ -3,7 +3,7 @@
     <div class='box'>
         <div class="search">
             <search @searchBtn='searchBtn' class="search-box"></search>
-            <div class="designLib" @mouseover="changeActiveDesign($event)" @mouseout="removeActiveDesign($event)">设计库</div>
+            <div class="designLib" @mouseover="changeActiveDesign($event)" @mouseout="removeActiveDesign($event)" @click="onWareClick">设计库</div>
             <div class="makeNew" @mouseover="changeActiveNew($event)" @mouseout="removeActiveNew($event)" @click="onNewClick">新建</div>
         </div>
         <div class="main"  v-infinite-scroll="load" style="overflow:auto" infinite-scroll-distance=40 >
@@ -27,8 +27,7 @@
         </div>
 
         <new-catalog :isVisible='dialogVisible' @closeDialog='closeDialog'></new-catalog>
-        <!-- 新建目录 -->
-
+        <ware-dialog :isWareVisible='wareVisible' @closeWare='closeWare'></ware-dialog>
     </div>
 </template>
 
@@ -38,6 +37,7 @@ import search from '../Common/Search'
 import handleBtn from './Common/HandleBtn'
 import NewChoice from './CreateList/NewChoice'
 import NewCatalog from './Common/NewCatalog'
+import WareDialog from './CreateList/WareDialog'
 export default {
     name:"CreateList",
     components: {
@@ -45,6 +45,7 @@ export default {
         handleBtn,
         NewChoice,
         NewCatalog,
+        WareDialog,
     },
     props:{
       itemList:Array
@@ -52,7 +53,8 @@ export default {
     data() {
         return {
             // btnVal:1,
-            dialogVisible:false,
+            dialogVisible:false,  //新建弹框
+            wareVisible:false,  //设计库弹框
 
         };
     },
@@ -74,6 +76,9 @@ export default {
         closeDialog(){
           this.dialogVisible = false
         },
+        closeWare(){
+          this.wareVisible = false
+        },
         searchBtn(val){
             console.log(val)
         },
@@ -81,6 +86,11 @@ export default {
         onNewClick(){
           this.dialogVisible = true
           console.log(this.dialogVisible)
+        },
+      // 点击设计库
+        onWareClick(){
+          this.wareVisible= true
+          console.log(this.wareVisible)
         },
       // 更多操作按钮
         handleBtn(){

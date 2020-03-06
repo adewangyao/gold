@@ -1,7 +1,7 @@
 <!--  -->
 <template>
     <div class='rich-box'>
-        <UE :defaultMsg="defaultMsg" :config="config" ref="hzue"></UE>
+        <UE :defaultMsg="defaultMsg" :config="config" ref="hzue" @blur="ueBlur"></UE>
     </div>
 </template>
 
@@ -14,6 +14,7 @@ components: {
     UE,
 },
 props:{
+  // 默认内容
   initInn:{
     type:String,
     default:'<div>请输入内容...</div>'
@@ -34,29 +35,37 @@ computed: {
 },
 
 watch: {
+  defaultMsg(nVal,oVal){
 
+  }
 },
 
 methods: {
-    // setUEContent(data) {
-    //     this.editor.ready(function () {
-    //         this.editor.setContent(data); // 确保UE加载完成后，放入内容。
-    //     });
-    // },
-    // getUEContent() {
-    //     let content = this.editor.getContent()
-    //     let contentTxt = this.editor.getContentTxt()
-    //     let data = {
-    //         html: content,
-    //         html_original: content,
-    //         content: contentTxt
-    //     }
-    //     return data
-    //     // this.$emit('SetJsonRichText',data)
-    // },
+
+    // 失去焦点
+    ueBlur(){
+      if(this.$store.state.choiceType != 'tasekGroupTitle'){
+        this.createRichText()
+      }
+    },
+    // 发送富文本请求
+    createRichText(){
+      let param = {
+        position: 0,
+        content: this.getContent(),
+        taskId: 1
+      }
+      this.sendRequest('/TaskContent/create_word',param,res=>{
+
+      })
+    },
+
+
+    // 标题时引用的富文本
     setContent(){
       this.$refs.hzue.setUEContent(this.initInn)
     },
+    // 获取富文本内容
     getContent () {
       let val = this.$refs.hzue.getUEContent()
       console.log(val)

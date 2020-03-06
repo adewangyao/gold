@@ -16,6 +16,10 @@ export default {
     mounted() {
         let that = this
         that.editor = UE.getEditor(that.randomId, that.config); // 初始化UE
+        // 增加监听失去焦点的事件
+        UE.getEditor(that.randomId).addListener('blur',function(){
+            that.$emit('blur')
+          });
     },
     methods: {
         setUEContent(data) {

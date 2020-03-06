@@ -3,7 +3,7 @@
   <div>
         <el-dialog
             :visible.sync="dialogVisible"
-            custom-class=“new-dialog”
+            custom-class="new-dialog"
             width="1220px"
             @closed="close"
             >
@@ -131,8 +131,6 @@ export default {
                 this.choiceName.push(val.name)
             }else if (this.choiceName.length==7){
                 this.choiceName.length = 6
-                console.log(this.choiceName)
-                console.log(this.choiceName)
                 this.choiceName.push(val.name)
             }
 
@@ -147,7 +145,6 @@ export default {
                     catName = catName+'/'+item
                 }
             })
-            console.log(catName,catid)
             let param  = {
                 name:this.choiceName[this.choiceName.length-1],
                 catalog:catid,
@@ -180,7 +177,6 @@ export default {
         getCatalog(){
             // this.startLoading()
             this.sendRequest('/Asset/catalog',this.newParam,(res)=>{
-                console.log(res)
                 // res = res.result
                 if(res.retcode==0){
                     this.choiceName = []
@@ -220,7 +216,6 @@ export default {
                             }
                         })
                     })
-                    console.log(this.choiceName)
                 }
             })
         },},

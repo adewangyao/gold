@@ -9,7 +9,7 @@
                 <img src="/static/image/leftarrow.png" alt="">
             </span>
             <search @searchBtn='searchBtn' class="search-box"></search>
-            <span class="make-new" @mouseover='onMouseOver($event)'  @mouseout="removeActive($event)" @click="newClassify">新建分类</span>
+            <span class="make-new" @mouseover='onMouseOver($event)'  @mouseout="removeActive($event)" @click="newClassify('')">新建分类</span>
         </div>
         <div class="main">
             <div class="item">
@@ -19,24 +19,13 @@
                 <span class="item-title">2019年下半年语文阅读学习计划</span>
                 <span class="item-time">2018-01-06</span>
                 <span class="item-btn">
-                    <span class="rename">重命名</span>
-                    <span class="del">删除</span>
+                    <span class="rename" @click="newClassify('1')">重命名</span>
+                    <span class="del" @click="onClickDel">删除</span>
                 </span>
             </div>
-            <div class="item">
-                <span class="bookmark">
-                    <!-- b不同颜色根据i值用8除余数乘-8 -->
-                    <img  class="bookcolor" src="/static/image/bookmarks.png" alt="" style="margin-left:-8px">
-                </span>
-                <span class="item-title">2019年下半年语文阅读学习计划</span>
-                <span class="item-time">2018-01-06</span>
-                <span class="item-btn">
-                    <span class="rename">重命名</span>
-                    <span class="del">删除</span>
-                </span>
-            </div>
+
         </div>
-        <classify-dialog :isVisable='isVisable' @closeDialog='handleClose'></classify-dialog>
+        <classify-dialog :isVisable='isVisable' @closeDialog='handleClose' :classifyId='classifyId'></classify-dialog>
     </div>
 </template>
 
@@ -52,10 +41,11 @@ export default {
     },
 
     data() {
-    return {
-        btnColor:0,
-        isVisable:false,
-    };
+      return {
+          btnColor:0,
+          isVisable:false,
+          classifyId:'',
+      };
     },
 
     computed: {
@@ -70,6 +60,13 @@ export default {
         searchBtn(val){
             console.log(val)
         },
+        // 点击删除按钮
+        onClickDel(){
+          let id = 1
+          this.sendRequest(`/Category/del/${id}`,'',res =>{
+            console.log(res)
+          })
+        },
         // 按钮进入换色
         onMouseOver(e){
             e.currentTarget.className="make-new make-new-over"
@@ -82,7 +79,12 @@ export default {
           this.isVisable = false
         },
         // 新建分类
-        newClassify(){
+        newClassify(val){
+          this.classifyId = val
+          this.isVisable = true
+        },
+        // 重命名
+        onClickRename(){
           this.isVisable = true
         }
     },

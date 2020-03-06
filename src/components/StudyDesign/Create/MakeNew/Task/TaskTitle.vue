@@ -2,12 +2,12 @@
 <template>
     <div class='task-title'>
       <el-input
-         @input='nameChange'
+         @blur='nameBlur'
          placeholder=""
          clearable
          v-model="name">
-      </el-input>  
-      <task-btn @handleBtn='handleBtn'></task-btn>       
+      </el-input>
+      <task-btn @handleBtn='handleBtn'></task-btn>
     </div>
 </template>
 
@@ -35,16 +35,23 @@ watch: {
 },
 
 methods: {
-  nameChange(){
-
+  nameBlur(){
+      let param = {
+        position: 0,
+        content: "string",
+        taskId: 1,
+      }
+      this.sendRequest('/TaskContent/create_title',param,res=>{
+        console.log(res)
+      })
   },
   // 操作按钮
   handleBtn(val){
     this.$emit(handleBtn,val)
-  }
+  },
 },
 
-beforeCreate() { 
+beforeCreate() {
 
 },
 created() {
@@ -56,7 +63,7 @@ created() {
     .task-title {
       margin-top: 14px;
       background: #fff;
-      
+
     }
     .task-title >>> .el-input{
         width:584px;

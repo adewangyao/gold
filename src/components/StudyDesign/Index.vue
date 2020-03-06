@@ -84,7 +84,7 @@ export default {
     pageChange(){
       // this.pageIndex++
       this.pageSize += 10
-      this.getDesignList()
+      // this.getDesignList()
     },
     // 切换菜单
     onHandleSelect(val){
@@ -95,7 +95,7 @@ export default {
     },
     getDesignList(){
       let sortVal = ''
-      return
+      // return
       console.log(this.menuVal)
       switch (this.menuVal){
         case '\/createlist':

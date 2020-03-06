@@ -8,6 +8,17 @@ const ClassifyList = ()=>import('@/components/StudyDesign/Classify/ClassifyList'
 const MakeNew = ()=>import('@/components/StudyDesign/Create/MakeNew')
 
 const UseList = ()=>import('@/components/StudyDesign/Use/UseList')
+const UseIndex = ()=>import('@/components/StudyDesign/Use/UseIndex')
+
+// 设计使用
+const AllSubmit = ()=>import('@/components/StudyDesign/Use/AllSubmit/AllSubmit.vue')
+const DataStatist = ()=>import('@/components/StudyDesign/Use/DataStatist/DataStatist.vue')
+const AllNotes = ()=>import('@/components/StudyDesign/Use/AllNotes/AllNotes.vue')
+const PersonStatist = ()=>import('@/components/StudyDesign/Use/DataStatist/PersonStatist.vue')
+// const AllSubmit = ()=>import('@/components/StudyDesign/Use/AllSubmit/AllSubmit.vue')
+
+
+
 // 不知道路由
 const Unknow = ()=>import('@/components/StudyDesign/Create/Unknow')
 Vue.use(Router)
@@ -42,8 +53,43 @@ export default new Router({
     ]
   },
   {
-    path: '/makenew',
+    path: '/UseIndex',
     name: '创建学习设计',
+    component: UseIndex,
+    children:[
+      {
+        path:'/use/AllSubmit',
+        name:'全部提交',
+        component:AllSubmit,
+      },
+      {
+        path:'/use/DataStatist',
+        name:'数据统计',
+        component:DataStatist,
+        children:[
+          {
+          path:'/use/Data/person',
+          name:'按照人员统计',
+          component:PersonStatist,
+        },
+      ]
+      },
+      {
+        path:'/use/AllNotes',
+        name:'全部笔记',
+        component:AllNotes,
+      },
+      // {
+      //   path:'/use/AllSubmit',
+      //   name:'全部提交',
+      //   component:AllSubmit,
+      // },
+    ]
+  },
+  // 学习设计使用
+  {
+    path: '/makenew',
+    name: '学习设计使用',
     component: MakeNew,
   },
   {

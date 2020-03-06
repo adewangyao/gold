@@ -3,11 +3,11 @@
     <div class="left-box">
         <div class="top-btn">
             <span class="task-group" @click="onCreateTaskGroup">建任务群</span>
-            <span class="task" @mouseenter.stop="changeActiveTask($event)" @mouseleave.stop="removeActiveTask($event)" @click="onCreateTask">创建任务</span>
+            <span class="task" @mouseenter.stop="changeActiveTask($event)" @mouseleave.stop="removeActiveTask($event)" @click="onCreateTask('new')">创建任务</span>
         </div>
         <div class="list">
             <!-- <div class="list-item" @mouseenter="changeActiveItem($event)" @mouseleave="removeActiveItem($event)"> -->
-            <div class="list-item">
+            <div class="list-item" v-for="(item,i) in data" :key='i'>
                 <!-- 名称 -->
                 <div class="item-until">
                     <span class="tip1"></span>
@@ -15,7 +15,7 @@
                         单元概述
                     </span>
                     <span class="handle-btn">
-                        <span class="btn-add"></span>
+                        <span class="btn-add" @click="onCreateTask(item.eId)"></span>
                         <span class="btn-reduce"></span>
                         <span class="btn-up"></span>
                         <span class="btn-down"></span>
@@ -23,29 +23,31 @@
                 </div>
                 <!-- 任务 -->
                 <div class="item-task">
-                    <span class="tip2"></span>
-                    <span class="unit-task">
-                        单元概述
-                    </span>
-                    <span class="handle-btn">
-                        <span class="btn-add"></span>
-                        <span class="btn-reduce"></span>
-                        <span class="btn-up"></span>
-                        <span class="btn-down"></span>
-                    </span>
-                </div>
-                <!-- 任务内容 -->
-                <div class="item-inn">
-                    <span class="tip2"></span>
-                    <span class="unit-inn">
-                        单元概述
-                    </span>
-                    <span class="handle-btn">
-                        <span class="btn-add"></span>
-                        <span class="btn-reduce"></span>
-                        <span class="btn-up"></span>
-                        <span class="btn-down"></span>
-                    </span>
+                    <div class="item-task-inn">
+                      <span class="tip2"></span>
+                      <span class="unit-task">
+                          单元概述
+                      </span>
+                      <span class="handle-btn">
+                          <span class="btn-add" @click="onChildTask(item.eId)"></span>
+                          <span class="btn-reduce"></span>
+                          <span class="btn-up"></span>
+                          <span class="btn-down"></span>
+                      </span>
+                    </div>
+                    <!-- 任务内容 -->
+                    <div class="item-inn">
+                        <span class="tip2"></span>
+                        <span class="unit-inn">
+                            单元概述
+                        </span>
+                        <span class="handle-btn">
+                            <!-- <span class="btn-add"></span> -->
+                            <span class="btn-reduce"></span>
+                            <span class="btn-up"></span>
+                            <span class="btn-down"></span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,7 +58,9 @@
 
 
 export default {
-
+    props:{
+      data:Array,
+    },
     components: {
 
     },
@@ -68,10 +72,12 @@ export default {
     },
 
     computed: {
-
-    },
+      },
 
     watch: {
+      data (nva,ol) {
+        console.log(nva)
+      }
 
     },
 
@@ -90,16 +96,35 @@ export default {
 
         },
         // 创建任务
-        onCreateTask(){
-          let param = {
-            title: "新建任务",
-            content: "string",
-            dsId: 1,
-            position: 0
+        onCreateTask(val){
+          let parentId = ''
+          if(val=='new'){     //如果是点击上册新建任务 传o如果是任务群下新建传父eid
+            parentId = 0
+          }else{
+            parentId = val
           }
-          this.sendRequest('/Task/create_task_group',param,(res)=>{
+          let param = {
+            parentId:parentId,
+            dsId: 1,
+            pattern:2,
+            position: 0,
+            compeletedStd:1,
+          }
+          this.sendRequest('/Task/create_task',param,(res)=>{
             console.log(res)
           })
+        },
+        // 创建子任务
+        onChildTask(){
+          let param = {
+              parentId: 0,
+              position: 0,
+              dsId: 0
+          }
+          this.sendRequest('/Task/create_child_task',param,res=>{
+            console.log(res)
+          })
+
         },
 
     },
@@ -108,7 +133,6 @@ export default {
 
     },
     created() {
-
     },
 }
 </script>
@@ -151,6 +175,24 @@ export default {
     }
     .list-item>div{
         position: relative;
+    }
+    .item-inn:hover {
+        background: #fff;
+        box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
+        border-radius: 2px;
+        color: #6B92F4;
+    }
+    .item-until:hover {
+        background: #fff;
+        box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
+        border-radius: 2px;
+        color: #6B92F4;
+    }
+    .item-task-inn:hover{
+        background: #fff;
+        box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
+        border-radius: 2px;
+        color: #6B92F4;
     }
     /* 列表样式 */
     .tip1 {
@@ -209,9 +251,20 @@ export default {
     /* 任务  */
     .item-task{
         cursor: pointer;
-        padding-left: 30px;
+        padding-left: 20px;
         width: 312px;
-        height: 40px;
+        /* height: 40px; */
+        line-height: 40px;
+        box-sizing: border-box;
+        font-size: 16px;
+        color: #4F4F4F;
+        letter-spacing: 0;
+    }
+    .item-task-inn{
+        cursor: pointer;
+        width: 284px;
+        /* height: 40px; */
+        padding-left: 10px;
         line-height: 40px;
         box-sizing: border-box;
         font-size: 16px;
@@ -220,9 +273,10 @@ export default {
     }
     /* 任务内容 */
     .item-inn{
+      position: relative;
         cursor: pointer;
-        padding-left: 40px;
-        width: 312px;
+        padding-left: 20px;
+        width: 292px;
         height: 40px;
         line-height: 40px;
         box-sizing: border-box;
@@ -233,7 +287,7 @@ export default {
     /* 操作按钮样式 */
     .handle-btn{
         position: absolute;
-        right: 0;
+        right: 10px;
         top: 4px;
     }
     .handle-btn>span{

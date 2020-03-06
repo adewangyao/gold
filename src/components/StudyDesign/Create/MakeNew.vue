@@ -4,9 +4,19 @@
         <!-- 顶部 -->
         <top class="top"> </top>
         <div class="inner">
-            <left class="left"></left>
+            <left class="left" :data='leftData'></left>
             <div class="right">
-                <div class="right-top">
+                <div class="right-top2" v-if="choiceType=='tasekGroupTitle'">
+                    <span>预留</span>
+                    <span>工具</span>
+                    <span>量表</span>
+                    <span>提交</span>
+                    <span>学练</span>
+                    <span>资源</span>
+                    <span>文字</span>
+                    <span>标题</span>
+                </div>
+                <div class="right-top" v-else>
                     <span @click='onAddComponent("预留")'>预留</span>
                     <span @click='onAddComponent("工具")'>工具</span>
                     <span @click='onAddComponent("量表")'>量表</span>
@@ -16,9 +26,10 @@
                     <span @click='onAddComponent("文字")'>文字</span>
                     <span @click='onAddComponent("标题")'>标题</span>
                 </div>
+
                 <sum-unit v-if="choiceType=='tasekGroupTitle'"></sum-unit>
                 <!--addtype为上面文字按钮的功能  -->
-                <!-- <task  :addtype='addType'></task> -->
+                <task  :addtype='addType' :addClick='addNum'></task>
 
             </div>
         </div>
@@ -44,6 +55,9 @@ export default {
     data() {
         return {
             addType:'',  //添加的组件名称
+            addNum:0,
+            leftData:[],  //左侧菜单数据
+            // rightData:
             // choiceType:this.$store.state.choiceType,
 
         };
@@ -62,6 +76,7 @@ export default {
     methods: {
         onAddComponent(val){
             this.addType = val
+            this.addNum++
         },
         // 调试请求
         testRequest(){
@@ -110,6 +125,19 @@ export default {
                 // .then(res=>{
                 //     console.log('res=>',res);
                 // })
+        },
+        // 获取学习设计详情
+        getDesignDeatil(){
+          let param = {
+            id:1,
+          }
+          this.sendRequest('/Desgin/get/1',param,res=>{
+            console.log(res)
+            if(res.retcode==0){
+              this.leftData = res.result[0].tasks
+              console.log(this.leftData)
+            }
+          })
         }
     },
 
@@ -117,7 +145,7 @@ export default {
 
     },
     created() {
-        this.testRequest()
+        this.getDesignDeatil()
     },
 }
 </script>
@@ -161,6 +189,27 @@ export default {
         color: #4F4F4F;
         margin-left: 8px;
         cursor: pointer;
+    }
+    .right-top2 {
+        height: 32px;
+
+    }
+    .right-top2 >span{
+        float: right;
+        opacity: .5;
+        display: block;
+        background: #FFFFFF;
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,0.04);
+        border-radius: 1px;
+        border-radius: 1px;
+        width: 60px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 14px;
+        color: #4F4F4F;
+        margin-left: 8px;
+        cursor: not-allowed;
     }
     .right-top >span:hover {
         background: #6B92F4;

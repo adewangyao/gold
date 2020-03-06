@@ -5,7 +5,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  choiceType:'',
+  choiceType:'',    //内容的状态
   createDesign:'',  //创建成功状态
 }
 const mutations = {

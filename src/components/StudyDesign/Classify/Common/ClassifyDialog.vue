@@ -22,12 +22,14 @@ export default {
     isVisable:{
       type:Boolean,
       default:false,
-      }
+      },
+    classifyId:String,
   },
   data () {
     return {
       input:'',
       dialogVisible:false,
+      // gid:'',
     };
   },
   watch:{
@@ -40,11 +42,15 @@ export default {
 
 
   methods: {
+    // 创建分类
     createClassify(){
       let param = {
-        name:'12345'
+        gid:this.classifyId,
+        name:this.input
       }
-      this.sendRequest('/Category/create',param,res=>{
+      console.log(param)
+      return
+      this.sendRequest('/Category/mgr',param,res=>{
         console.log(res)
       })
     },

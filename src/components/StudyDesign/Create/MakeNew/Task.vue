@@ -7,32 +7,32 @@
                 placeholder=""
                 clearable
                 v-model="value">
-            </el-input>  
+            </el-input>
             <span class="task-top-font">
                 手动开启
-            </span>    
+            </span>
             <el-switch
                 v-model="openVal"
                 >
             </el-switch>
             <span class="task-top-font">
-                闯关模式  
-            </span> 
+                闯关模式
+            </span>
             <el-switch
                 v-model="breakVal"
                 >
-            </el-switch>  
+            </el-switch>
             <span class="task-save">
                 保存
             </span>
         </div>
         <div class="task-inner">
-            <task-title></task-title>
+            <!-- <task-title></task-title>
             <rich-text></rich-text>
             <Trainer></Trainer>
             <subject-tool></subject-tool>
             <task-scale></task-scale>
-            <teacher-reserve></teacher-reserve>
+            <teacher-reserve></teacher-reserve> -->
             <component v-for="(item,i) in componentData" :key="i" :is="item.type" :data="item.itemData"  @handleBtn='handleBtn'></component>
         </div>
     </div>
@@ -61,25 +61,26 @@ props:{
     addtype:{
         type:String,
         default:''
-    }
+    },
+    addClick:Number,  //点击一次触发一次
 },
 data() {
   return {
       value:"",
       openVal:"",
       breakVal:"",
-      componentData:[],   //循环组件      
+      componentData:[],   //循环组件
   };
 },
 
 computed: {
-    
+
 },
 
 watch: {
-    addtype(nVal,oVal){
-        console.log(nVal,oVal)
-        this.addtypeChange(nVal)
+    addClick(nVal,oVal){
+      console.log(this.addtype)
+      this.addtypeChange(this.addtype)
     }
 },
 
@@ -93,29 +94,28 @@ methods: {
         let addEl = ''
         console.log(val)
         switch(val){
-            case '标题': 
-            alert(1)
+            case '标题':
                 addEl='task-title'
                 break;
-            case '文字': 
+            case '文字':
                 addEl='rich-text'
                 break;
             case '资源':
-                addEl='task-title' 
+                addEl='task-title'
                 break;
-            case '学练': 
-                addEl='trainer' 
+            case '学练':
+                addEl='trainer'
                 break;
-            case '提交': 
+            case '提交':
                 break;
-            case '量表': 
-                addEl='task-scale' 
+            case '量表':
+                addEl='task-scale'
                 break;
-            case '工具': 
-                addEl='subject-tool' 
+            case '工具':
+                addEl='subject-tool'
                 break;
-            case '预留': 
-                addEl='teacher-reserve' 
+            case '预留':
+                addEl='teacher-reserve'
                 break;
 
         }
@@ -129,10 +129,16 @@ methods: {
     // 操作按钮
     handleBtn(){
 
+    },
+
+
+    // 任务标题
+    creteTitle(){
+
     }
 },
 
-beforeCreate() { 
+beforeCreate() {
 
 },
 created() {

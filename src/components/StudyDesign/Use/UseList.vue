@@ -32,29 +32,56 @@
 
           <div class="item-right">
             <span>编辑</span>
-            <span>对象</span>
+            <span @click="onClickObj">对象</span>
             <span>归档</span>
             <span>授课</span>
           </div>
+          <span class="item-num-tip">
+              12344
+          </span>
         </div>
+        <div class="use-inn-item">
+          <div class="item-left">
+            <div class="item-title">123132</div>
+            <div class="item-tips">
+              <span>4545565</span>
+              <span>任务：乱七八遭</span>
+              <span>创建：你的名字</span>
+              <span>未共享</span>
+            </div>
+          </div>
 
+          <div class="item-right">
+            <span>编辑</span>
+            <span @click="onClickObj">对象</span>
+            <span>归档</span>
+            <span>授课</span>
+          </div>
+          <span class="item-num-tip">
+              12344
+          </span>
+        </div>
       </div>
+      <dialog-obj :isVisble='isVisble' @closeDialog='closeDialog'></dialog-obj>
   </div>
 </template>
 
 <script>
 
 import search from '../Common/Search'
+import DialogObj from './Common/DialogObj'
 export default {
     name:"UseList",
     components: {
         search,
+        DialogObj,
     },
     props:{
       itemList:Array
     },
   data() {
     return {
+      isVisble:false,
       isScreen:0,
       config1:{
           width:'60px',
@@ -72,11 +99,17 @@ export default {
   },
 
   methods: {
+    onClickObj(){
+      this.isVisble=true
+    },
     searchBtn(val){
         console.log(val)
     },
     onClickScreen(){
       this.isScreen = !this.isScreen
+    },
+    closeDialog(){
+      this.isVisble = false
     }
   },
 
@@ -198,6 +231,7 @@ export default {
       top: 32%;
     }
     .item-right span{
+      cursor: pointer;
       display: inline-block;
       height: 26px;
       margin-left: 16px;
@@ -207,5 +241,18 @@ export default {
       font-size: 12px;
       border: 1px solid #CCD7EE;
       text-align: center;
+    }
+    .item-num-tip {
+      position: absolute;
+      right: 0px;
+      top: -6px;
+      width: 48px;
+      height: 20px;
+      padding-left: 6px;
+      line-height: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #FFFFFF;
+      background: url('/static/image/tips_num.png');
     }
 </style>

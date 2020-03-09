@@ -54,7 +54,7 @@ export default new Router({
   },
   {
     path: '/UseIndex',
-    name: '创建学习设计',
+    name: '学习设计使用',
     component: UseIndex,
     children:[
       {
@@ -89,7 +89,7 @@ export default new Router({
   // 学习设计使用
   {
     path: '/makenew',
-    name: '学习设计使用',
+    name: '创建学习设计',
     component: MakeNew,
   },
   {

@@ -11,41 +11,41 @@
                 <!-- 名称 -->
                 <div class="item-until">
                     <span class="tip1"></span>
-                    <span class="unit-title">
-                        单元概述
+                    <span class="unit-title" :title="item.title">
+                        {{item.title}}
                     </span>
                     <span class="handle-btn">
-                        <span class="btn-add" @click="onCreateTask(item.eId)"></span>
+                        <span class="btn-add" @click="onCreateTask(item)"></span>
                         <span class="btn-reduce"></span>
-                        <span class="btn-up"></span>
-                        <span class="btn-down"></span>
+                        <span class="btn-up" @click="onHandlePosition(item,true)"></span>
+                        <span class="btn-down" @click="onHandlePosition(item,false)"></span>
                     </span>
                 </div>
                 <!-- 任务 -->
-                <div class="item-task">
+                <div class="item-task" v-for="(citem,ci) in item.tasks" :key='ci'>
                     <div class="item-task-inn">
                       <span class="tip2"></span>
-                      <span class="unit-task">
-                          单元概述
+                      <span class="unit-task" :title="citem.title">
+                          {{citem.title}}
                       </span>
                       <span class="handle-btn">
-                          <span class="btn-add" @click="onChildTask(item.eId)"></span>
+                          <span class="btn-add" @click="onChildTask(citem)"></span>
                           <span class="btn-reduce"></span>
-                          <span class="btn-up"></span>
-                          <span class="btn-down"></span>
+                          <span class="btn-up" @click="onHandlePosition(citem,true)"></span>
+                          <span class="btn-down" @click="onHandlePosition(citem,false)"></span>
                       </span>
                     </div>
                     <!-- 任务内容 -->
-                    <div class="item-inn">
+                    <div class="item-inn" v-for="(ccitem,cci) in citem.tasks" :key='cci' :title="ccitem.title">
                         <span class="tip2"></span>
                         <span class="unit-inn">
-                            单元概述
+                            {{ccitem.title}}
                         </span>
                         <span class="handle-btn">
                             <!-- <span class="btn-add"></span> -->
                             <span class="btn-reduce"></span>
-                            <span class="btn-up"></span>
-                            <span class="btn-down"></span>
+                            <span class="btn-up" @click="onHandlePosition(ccitem,true)"></span>
+                            <span class="btn-down" @click="onHandlePosition(ccitem,false)"></span>
                         </span>
                     </div>
                 </div>
@@ -76,7 +76,6 @@ export default {
 
     watch: {
       data (nva,ol) {
-        console.log(nva)
       }
 
     },
@@ -91,40 +90,37 @@ export default {
         // 创建任务群
         onCreateTaskGroup(){
           this.$store.commit('changeType','tasekGroupTitle')
-          console.log(this.$store.state.choiceType)
-          return
-
         },
         // 创建任务
-        onCreateTask(val){
-          let parentId = ''
-          if(val=='new'){     //如果是点击上册新建任务 传o如果是任务群下新建传父eid
-            parentId = 0
-          }else{
-            parentId = val
-          }
-          let param = {
-            parentId:parentId,
-            dsId: 1,
-            pattern:2,
-            position: 0,
-            compeletedStd:1,
-          }
-          this.sendRequest('/Task/create_task',param,(res)=>{
-            console.log(res)
-          })
+        onCreateTask(item){
+          this.$store.commit('changeLeftInfo',val)
+
         },
         // 创建子任务
-        onChildTask(){
+        onChildTask(val){
+          this.$store.commit('changeType','tasekTitle')
+
           let param = {
-              parentId: 0,
-              position: 0,
-              dsId: 0
+              parentId: val.gid,
+              position: 1,
+              dsId: val.dsId,
+              title:'最底层任务',
           }
           this.sendRequest('/Task/create_child_task',param,res=>{
             console.log(res)
           })
 
+        },
+        // 操作位置
+        onHandlePosition(val,isUp){
+          console.log(val,isUp)
+          let param = {
+            taskId:val.eId,
+            direction:isUp,
+          }
+          this.sendRequest('/Task/update_position',param,res => {
+            console.log(res)
+          })
         },
 
     },
@@ -139,7 +135,7 @@ export default {
 <style  scoped>
     .left-box {
        width: 350px;
-       height: 90%;
+       min-height: 90%;
        background: #FCFCFC;
        box-sizing: border-box;
        padding-top: 12px;
@@ -156,6 +152,14 @@ export default {
         height: 32px;
         font-family: SourceHanSansCN-Regular;
         font-size: 16px;
+    }
+    .unit-task {
+      padding-left: 12px;
+      width: 140px;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .task-group {
         background: #6B92F4;
@@ -188,6 +192,23 @@ export default {
         border-radius: 2px;
         color: #6B92F4;
     }
+    .unit-title {
+      width: 140px;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      height: 30px;
+    }
+    .unit-inn {
+      width: 140px;
+      padding-left: 12px;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      height: 30px;
+    }
     .item-task-inn:hover{
         background: #fff;
         box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
@@ -198,12 +219,14 @@ export default {
     .tip1 {
         display: inline-block;
         width: 3px;
-        height: 10px;
+        height: 20px;
         background: #6B92F4;
     }
     .tip2 {
-        display: inline-block;
         width:4px;
+        position: absolute;
+        top: 48%;
+        /* left: 0; */
         height:4px;
         border-radius: 50%;
         background: #757575;
@@ -262,8 +285,9 @@ export default {
     }
     .item-task-inn{
         cursor: pointer;
-        width: 284px;
-        /* height: 40px; */
+        /* width: 284px; */
+        position: relative;
+        height: 40px;
         padding-left: 10px;
         line-height: 40px;
         box-sizing: border-box;
@@ -275,7 +299,7 @@ export default {
     .item-inn{
       position: relative;
         cursor: pointer;
-        padding-left: 20px;
+        padding-left: 30px;
         width: 292px;
         height: 40px;
         line-height: 40px;

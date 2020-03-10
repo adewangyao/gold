@@ -9,23 +9,23 @@
                 <img src="/static/image/leftarrow.png" alt="">
             </span>
             <search @searchBtn='searchBtn' class="search-box"></search>
-            <span class="make-new" @mouseover='onMouseOver($event)'  @mouseout="removeActive($event)" @click="newClassify('')">新建分类</span>
+            <span class="make-new" @mouseover='onMouseOver($event)'  @mouseout="removeActive($event)" @click="newClassify({})">新建分类</span>
         </div>
         <div class="main">
-            <div class="item">
+            <div class="item" v-for="(item,i) in itemList" :key="i">
                 <span class="bookmark">
                     <img  class="bookcolor" src="/static/image/bookmarks.png" alt="">
                 </span>
-                <span class="item-title">2019年下半年语文阅读学习计划</span>
+                <span class="item-title">{{item.name}}</span>
                 <span class="item-time">2018-01-06</span>
                 <span class="item-btn">
-                    <span class="rename" @click="newClassify('1')">重命名</span>
-                    <span class="del" @click="onClickDel">删除</span>
+                    <span class="rename" @click="newClassify(item)">重命名</span>
+                    <span class="del" @click="onClickDel(item)">删除</span>
                 </span>
             </div>
 
         </div>
-        <classify-dialog :isVisable='isVisable' @closeDialog='handleClose' :classifyId='classifyId'></classify-dialog>
+        <classify-dialog :isVisable='isVisable' @closeDialog='handleClose' :val='val'></classify-dialog>
     </div>
 </template>
 
@@ -44,7 +44,8 @@ export default {
       return {
           btnColor:0,
           isVisable:false,
-          classifyId:'',
+          val:{},
+          itemList:[],
       };
     },
 
@@ -58,12 +59,10 @@ export default {
 
     methods: {
         searchBtn(val){
-            console.log(val)
         },
         // 点击删除按钮
-        onClickDel(){
-          let id = 1
-          this.sendRequest(`/Category/del/${id}`,'',res =>{
+        onClickDel(item){
+          this.sendRequest(`/Category/del/${item.gId}`,'',res =>{
             console.log(res)
           })
         },
@@ -77,23 +76,28 @@ export default {
         // 关闭弹框
         handleClose(){
           this.isVisable = false
+          this.getCategory()
+
         },
         // 新建分类
         newClassify(val){
-          this.classifyId = val
+          this.val = val
           this.isVisable = true
         },
         // 重命名
         onClickRename(){
           this.isVisable = true
-        }
+        },
+        getCategory(){
+          this.sendRequest('/Query/category','',res=>{
+            this.itemList = res.result[0]
+          })
+        },
     },
 
-    beforeCreate() {
 
-    },
     created() {
-
+      this.getCategory()
     },
 }
 </script>

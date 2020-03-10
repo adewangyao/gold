@@ -6,8 +6,8 @@
             <div class="designLib" @mouseover="changeActiveDesign($event)" @mouseout="removeActiveDesign($event)" @click="onWareClick">设计库</div>
             <div class="makeNew" @mouseover="changeActiveNew($event)" @mouseout="removeActiveNew($event)" @click="onNewClick">新建</div>
         </div>
-        <div class="main"  v-infinite-scroll="load" style="overflow:auto" infinite-scroll-distance=40 >
-            <div class="item" v-for="(item,i) in itemList" :key="i" >
+        <div class="main"  v-infinite-scroll="load" style="overflow:auto"  >
+            <div class="item" v-for="(item,i) in itemList" :key="i" @click="onItemClick(item.gid)">
                 <div class="item-left" >
                     <div class="item-title">{{item.name}}</div>
                     <div class="item-msg">
@@ -19,9 +19,9 @@
                     </div>
                 </div>
                 <div class="item-right">
-                    <span>发 布</span>
-                    <span>编 辑</span>
-                    <handle-btn></handle-btn>
+                    <span @click.stop="">发 布</span>
+                    <span @click.stop="">编 辑</span>
+                    <handle-btn :item='item'></handle-btn>
                 </div>
             </div>
         </div>
@@ -85,16 +85,23 @@ export default {
       // 点击新建
         onNewClick(){
           this.dialogVisible = true
-          console.log(this.dialogVisible)
         },
       // 点击设计库
         onWareClick(){
           this.wareVisible= true
-          console.log(this.wareVisible)
         },
       // 更多操作按钮
         handleBtn(){
             this.btnVal = !this.btnVal
+        },
+      // 点击进入详情
+        onItemClick(val){
+          this.$router.push({
+            path:"/makenew",
+            query:{
+              id:val
+            }
+          })
         },
       // 操作按钮进入变色
         changeActiveDesign(e){
@@ -183,6 +190,7 @@ export default {
         width: 100%;
         height: 80px;
         background: #fff;
+        cursor: pointer;
         padding: 20px 20px 16px 20px;
         box-sizing: border-box;
         border-bottom: 1px solid #eaecee;

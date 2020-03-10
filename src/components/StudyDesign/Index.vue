@@ -59,7 +59,7 @@ export default {
       menuVal:'/createlist',
       itemList:[],
       pageIndex:1,  //翻页
-      pageSize:10,
+      pageSize:4,
     };
   },
 
@@ -71,7 +71,6 @@ export default {
 
   watch: {
     createType(nVal,oVak){
-      alert(222)
       if(nVal=='createSuccess'){
         this.getDesignList()
         this.$store.commit('changeCreate','')
@@ -83,11 +82,12 @@ export default {
     // 滚动加载
     pageChange(){
       // this.pageIndex++
-      this.pageSize += 10
-      // this.getDesignList()
+      this.pageSize += 2
+      this.getDesignList()
     },
     // 切换菜单
     onHandleSelect(val){
+      this.pageSize = 4 //切换路由后重置页码尺寸
       this.pageIndex = 1
       this.menuVal = val
       this.$router.push(val)

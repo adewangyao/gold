@@ -1,7 +1,7 @@
 <!-- 任务界面 -->
 <template>
     <div class="task-box">
-        <div class="task-top">
+        <div class="task-top" v-if="nowType!='tasekGroupTitle'">
             <el-input
                 @input='handleChange'
                 placeholder=""
@@ -12,6 +12,8 @@
                 手动开启
             </span>
             <el-switch
+                active-value="100"
+                inactive-value="0"
                 v-model="openVal"
                 >
             </el-switch>
@@ -20,9 +22,11 @@
             </span>
             <el-switch
                 v-model="breakVal"
+                active-value="100"
+                inactive-value="0"
                 >
             </el-switch>
-            <span class="task-save">
+            <span class="task-save" @click="onSaveClick">
                 保存
             </span>
         </div>
@@ -74,6 +78,9 @@ data() {
 },
 
 computed: {
+  nowType:function(){     //当前选中的左侧菜单位置
+    return this.$store.state.choiceType
+  },
 
 },
 
@@ -130,7 +137,32 @@ methods: {
     handleBtn(){
 
     },
-
+    // 保存
+    onSaveClick(){
+      let item = this.$store.state.leftInfo
+      console.log(item)
+      return
+      let parentId = ''
+      let dsid = ''
+      if(item=='new'){     //如果是点击上册新建任务 传o如果是任务群下新建传父eid
+        parentId = 0
+        dsid = 0
+      }else{
+        parentId = item.gid
+        dsid = item.dsId
+      }
+      let param = {
+        parentId:parentId,    //pattern =1, 手工开启， 2：闯关模式
+        dsId: dsid,
+        pattern:2,
+        position: 1,
+        title:this.value,
+        completedStd :3,
+      }
+      this.sendRequest('/Task/create_task',param,(res)=>{
+        console.log(res)
+      })
+    },
 
     // 任务标题
     creteTitle(){

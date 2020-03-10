@@ -155,7 +155,6 @@ export default {
               if(res.retcode==0){
                 this.dialogVisible=false
                 this.$notify({
-                  // title: '创建成功',
                   message: '创建成功',
                   type: 'success',
                   duration:1000,
@@ -165,8 +164,7 @@ export default {
                 this.$store.commit('changeCreate','createSuccess')
               }else{
                   this.$notify.error({
-                    // title: '创建失败',
-                    message: '创建成功',
+                    message: '创建失败',
                     duration:1000,
                   });
               }

@@ -129,9 +129,8 @@ export default {
         // 获取学习设计详情
         getDesignDeatil(){
           let param = {
-            id:1,
           }
-          this.sendRequest('/Desgin/get/1',param,res=>{
+          this.sendRequest(`/Desgin/get/${this.$route.query.id}`,param,res=>{
             console.log(res)
             if(res.retcode==0){
               this.leftData = res.result[0].tasks

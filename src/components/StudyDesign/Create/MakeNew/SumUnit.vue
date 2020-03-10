@@ -1,5 +1,5 @@
 
-<!-- 单元概述 -->
+<!-- 单元概述新建任务群 -->
 <template>
   <div>
     <div class="search">
@@ -45,19 +45,29 @@ methods: {
   // 获取富文本内容
   getContent(val){
     this.initInn = this.$refs.rt.getContent()
-    alert(this.initInn)
   },
   saveTitle(){
     this.getContent()
     let param = {
       title: this.value,
       content: this.initInn,
-      dsId: 1,
-      position: 0
+      dsId: this.$route.query.id,
+      position: 2
     }
     this.sendRequest('/Task/create_task_group',param,(res)=>{
-      console.log(res)
       if(res.retcode==0&&res.result.length){
+        this.$notify({
+          // title: '创建成功',
+          message: '创建成功',
+          type: 'success',
+          duration:1000,
+        });
+      }else {
+        this.$notify.error({
+          // title: '创建失败',
+          message: '创建失败',
+          duration:1000,
+        });
       }
     })
   },

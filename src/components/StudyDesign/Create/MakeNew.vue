@@ -6,7 +6,7 @@
         <div class="inner">
             <left class="left" :data='leftData'></left>
             <div class="right">
-                <div class="right-top2" v-if="choiceType=='tasekGroupTitle'">
+                <div class="right-top2" v-if="choiceType=='taskGroup'||choiceType==''">
                     <span>预留</span>
                     <span>工具</span>
                     <span>量表</span>
@@ -27,7 +27,7 @@
                     <span @click='onAddComponent("标题")'>标题</span>
                 </div>
 
-                <sum-unit v-if="choiceType=='tasekGroupTitle'"></sum-unit>
+                <sum-unit v-if="choiceType=='taskGroup'"></sum-unit>
                 <!--addtype为上面文字按钮的功能  -->
                 <task  :addtype='addType' :addClick='addNum'></task>
 
@@ -65,6 +65,7 @@ export default {
 
     computed: {
       choiceType(){
+        console.log(this.$store.state.choiceType)
         return this.$store.state.choiceType
         }
     },

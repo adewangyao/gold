@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '../router'
 import Vue from 'vue'
 const request = axios.create({
-  baseURL: 'http://10.135.192.6:808/api/v1'
+  baseURL: 'http://10.135.193.129:808/api/v1'
 })
 
 // 请求拦截器

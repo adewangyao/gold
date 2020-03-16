@@ -15,18 +15,17 @@ components: {
 },
 props:{
   // 默认内容
-  initInn:{
-    type:String,
-    default:'<div>请输入内容...</div>'
-  }
+  initInn:String,
+  data:Object
 },
 data() {
   return {
-        defaultMsg:'',  //富文本内容 是html内容
-        config: {       //富文本长宽度
-            initialFrameWidth: 918,
-            initialFrameHeight: 410
-        },
+    nowContent:'',
+    defaultMsg:'',  //富文本内容 是html内容
+    config: {       //富文本长宽度
+        initialFrameWidth: 918,
+        initialFrameHeight: 410
+    },
   };
 },
 
@@ -36,25 +35,31 @@ computed: {
 
 watch: {
   defaultMsg(nVal,oVal){
-
+    console.log(nVal,oVal)
   }
 },
 
 methods: {
 
     // 失去焦点
-    ueBlur(){
-      if(this.$store.state.choiceType != 'tasekGroupTitle'){
+    ueBlur(){   //判断不为任务群的描述时执行
+      let content = this.getContent()  //增加内容判断看内容是否改变 改变的话则不发送请求
+      if(this.nowContent == content){return}
+      this.nowContent = content
+      if(this.$store.state.choiceType != 'taskGroup'){
         this.createRichText()
       }
     },
     // 发送富文本请求
     createRichText(){
+      let {gid} = this.$store.state.leftInfo
+      if(!this.getContent()){return}
       let param = {
-        position: 0,
         content: this.getContent(),
-        taskId: 1
+        taskId: gid,
+        // cId:'',
       }
+      if(this.data.gid){param.cId=this.data.gid}
       this.sendRequest('/TaskContent/create_word',param,res=>{
 
       })
@@ -68,25 +73,22 @@ methods: {
     // 获取富文本内容
     getContent () {
       let val = this.$refs.hzue.getUEContent()
-      console.log(val)
       return val.html
       // this.$emit('getUEContent',val)
     },
-    init(){     //要做mounted中初始化
-         //获取富文本的内容
-        // this.$refs.hzue.setUEContent('<a>sas</a>') //设置富文本内容
-    }
+
 },
 
 beforeCreate() {
 
 },
 mounted(){
-    this.init()
-    this.setContent()
+
+  this.initInn = this.data.content
+  this.setContent()
 },
 created() {
-
+    console.log(this.data)
     // this.init()
 },
 }

@@ -25,7 +25,7 @@
             </div>
 
         </div>
-        <classify-dialog :isVisable='isVisable' @closeDialog='handleClose' :val='val'></classify-dialog>
+        <classify-dialog :isVisable='isVisable' @upList='upList' @closeDialog='handleClose' :val='val'></classify-dialog>
     </div>
 </template>
 
@@ -62,8 +62,14 @@ export default {
         },
         // 点击删除按钮
         onClickDel(item){
-          this.sendRequest(`/Category/del/${item.gId}`,'',res =>{
-            console.log(res)
+          this.$confirm('是否删除该分类?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.sendRequest(`/Category/del/${item.gId}`,'',res =>{
+              console.log(res)
+            })
           })
         },
         // 按钮进入换色
@@ -92,6 +98,10 @@ export default {
           this.sendRequest('/Query/category','',res=>{
             this.itemList = res.result[0]
           })
+        },
+        upList(){
+          this.isVisable = false
+          this.getCategory()
         },
     },
 
@@ -200,4 +210,5 @@ export default {
         height: 24px;
         font-size: 12px;
     }
+
 </style>

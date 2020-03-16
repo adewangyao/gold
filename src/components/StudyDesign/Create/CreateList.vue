@@ -55,6 +55,7 @@ export default {
             // btnVal:1,
             dialogVisible:false,  //新建弹框
             wareVisible:false,  //设计库弹框
+            num:1,
 
         };
     },
@@ -80,7 +81,13 @@ export default {
           this.wareVisible = false
         },
         searchBtn(val){
-            console.log(val)
+          if(this.num){
+            this.num = 0
+            window.setTimeout(()=>{
+              this.$emit('keyChange',val)
+              this.num=1
+            },2000)
+          }
         },
       // 点击新建
         onNewClick(){

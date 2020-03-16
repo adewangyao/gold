@@ -12,7 +12,7 @@
                     <span class="change-img"></span>
                 </span>
 
-                <span @mouseenter.stop="changeActiveImg($event)" @mouseleave.stop="removeActiveImg($event)">
+                <span @mouseenter.stop="changeActiveImg($event)" @mouseleave.stop="removeActiveImg($event)" @click="isVisble=!isVisble">
                     <span class="img-img"></span>
                 </span>
             </div>
@@ -41,22 +41,27 @@
         </div>
         <!-- 目录弹框 -->
         <new-catalog :isVisible='dialogVisible' @closeDialog='closeDialog'></new-catalog>
+        <!-- 图片裁剪弹框 -->
+        <vue-cropper :isVisble='isVisble' @closeDialog='isVisble=false'></vue-cropper>
     </div>
 </template>
 
 <script>
 
 import NewCatalog from '../Common/NewCatalog'
+import VueCropper from '../Common/VueCropper'
 export default {
 
     components: {
       NewCatalog,
+      VueCropper,
     },
 
     data() {
         return {
             value:"",
-             dialogVisible:false,
+            isVisble:false,
+            dialogVisible:false,
         };
     },
 

@@ -7,49 +7,82 @@
         </div>
         <div class="list">
             <!-- <div class="list-item" @mouseenter="changeActiveItem($event)" @mouseleave="removeActiveItem($event)"> -->
-            <div class="list-item" v-for="(item,i) in data" :key='i'>
-                <!-- 名称 -->
-                <div class="item-until">
+            <template v-for="(item,i) in dataList"  >
+            <div class="list-item"  :key='i' v-if="item.type==1">
+                <!-- 第一层任务群 -->
+                <div class="item-until" :class="{'item-selected':choiceId==item.gid}">
                     <span class="tip1"></span>
-                    <span class="unit-title" :title="item.title">
+                    <span class="unit-title" :title="item.title" @click="onLeftClick('taskGroup',item)">
                         {{item.title}}
                     </span>
                     <span class="handle-btn">
                         <span class="btn-add" @click="onCreateTask(item)"></span>
-                        <span class="btn-reduce"></span>
+                        <span class="btn-reduce" @click="delTask(item)"></span>
                         <span class="btn-up" @click="onHandlePosition(item,true)"></span>
                         <span class="btn-down" @click="onHandlePosition(item,false)"></span>
                     </span>
                 </div>
                 <!-- 任务 -->
-                <div class="item-task" v-for="(citem,ci) in item.tasks" :key='ci'>
-                    <div class="item-task-inn">
+                <div class="item-task "  v-for="(citem,ci) in item.tasks" :key='ci'>
+                    <div class="item-task-inn" :class="{'item-selected':choiceId==citem.gid}">
                       <span class="tip2"></span>
-                      <span class="unit-task" :title="citem.title">
+                      <span class="unit-task" :title="citem.title" @click="onLeftClick('task',citem)">
                           {{citem.title}}
                       </span>
                       <span class="handle-btn">
                           <span class="btn-add" @click="onChildTask(citem)"></span>
-                          <span class="btn-reduce"></span>
+                          <span class="btn-reduce" @click="delTask(citem)"></span>
                           <span class="btn-up" @click="onHandlePosition(citem,true)"></span>
                           <span class="btn-down" @click="onHandlePosition(citem,false)"></span>
                       </span>
                     </div>
-                    <!-- 任务内容 -->
-                    <div class="item-inn" v-for="(ccitem,cci) in citem.tasks" :key='cci' :title="ccitem.title">
+                    <!-- 子任务 -->
+                    <div class="item-inn" :class="{'item-selected':choiceId==ccitem.gid}" v-for="(ccitem,cci) in citem.tasks" :key='cci' :title="ccitem.title">
                         <span class="tip2"></span>
-                        <span class="unit-inn">
+                        <span class="unit-inn" @click="onLeftClick('taskChildren',ccitem)">
                             {{ccitem.title}}
                         </span>
                         <span class="handle-btn">
                             <!-- <span class="btn-add"></span> -->
-                            <span class="btn-reduce"></span>
+                            <span class="btn-reduce" @click="delTask(ccitem)"></span>
                             <span class="btn-up" @click="onHandlePosition(ccitem,true)"></span>
                             <span class="btn-down" @click="onHandlePosition(ccitem,false)"></span>
                         </span>
                     </div>
                 </div>
             </div>
+            <div class="list-item" :key='i' v-if="item.type==2">
+                <!-- 第一层任务群 -->
+                <div class="item-until" :class="{'item-selected':choiceId==item.gid}">
+                    <span class="tip1"></span>
+                    <span class="unit-title" :title="item.title" @click="onLeftClick('task',item)">
+                        {{item.title}}
+                    </span>
+                    <span class="handle-btn">
+                        <span class="btn-add" @click="onChildTask(item)"></span>
+                        <span class="btn-reduce" @click="delTask(item)"></span>
+                        <span class="btn-up" @click="onHandlePosition(item,true)"></span>
+                        <span class="btn-down" @click="onHandlePosition(item,false)"></span>
+                    </span>
+                </div>
+                <!-- 任务 -->
+                <div class="item-task "  v-for="(citem,ci) in item.tasks" :key='ci'>
+                    <div class="item-task-inn" :class="{'item-selected':choiceId==citem.gid}">
+                      <span class="tip2"></span>
+                      <span class="unit-task" :title="citem.title" @click="onLeftClick('taskChildren',citem)">
+                          {{citem.title}}
+                      </span>
+                      <span class="handle-btn">
+                          <!-- <span class="btn-add" @click="onChildTask(citem)"></span> -->
+                          <span class="btn-reduce" @click="delTask(citem)"></span>
+                          <span class="btn-up" @click="onHandlePosition(citem,true)"></span>
+                          <span class="btn-down" @click="onHandlePosition(citem,false)"></span>
+                      </span>
+                    </div>
+
+                </div>
+            </div>
+            </template>
         </div>
     </div>
 </template>
@@ -58,20 +91,23 @@
 
 
 export default {
-    props:{
-      data:Array,
-    },
+    // props:{
+    //   data:Array,
+    // },
     components: {
 
     },
 
     data() {
-    return {
-
-    };
+      return {
+        dataList:[],
+        dsId:this.$route.query.id,
+        choiceId:'',
+      };
     },
 
     computed: {
+
       },
 
     watch: {
@@ -87,48 +123,93 @@ export default {
         removeActiveTask(e){
             e.currentTarget.className="task"
         },
+        // 编辑查看对应信息
+        onLeftClick(type,val){
+          val.isEdit = true
+          this.choiceId = val.gid
+          this.$store.commit('changeType',type)
+          this.$store.commit('changeLeftInfo',val)
+        },
+
         // 创建任务群
         onCreateTaskGroup(){
-          this.$store.commit('changeType','tasekGroupTitle')
+          this.$store.commit('changeType','taskGroup')
+          this.$store.commit('changeLeftInfo',{})
         },
         // 创建任务
         onCreateTask(item){
-          this.$store.commit('changeLeftInfo',val)
+          this.choiceId = item.gid
+          if(item!='new'){
+            item.isEdit = false
+          }
+          this.$store.commit('changeLeftInfo',item)
+          this.$store.commit('changeType','task')
+
 
         },
         // 创建子任务
         onChildTask(val){
-          this.$store.commit('changeType','tasekTitle')
+          this.choiceId = val.gid
+          this.$store.commit('changeType','taskChildren')
 
           let param = {
               parentId: val.gid,
-              position: 1,
-              dsId: val.dsId,
-              title:'最底层任务',
+              dsId: this.dsId,
+              title:'2务',
+              // gid:'',
           }
-          this.sendRequest('/Task/create_child_task',param,res=>{
+          this.sendRequest('/Task/child_task_mgr',param,res=>{
             console.log(res)
+            this.getTaskTree()
           })
 
         },
+        // 删除任务
+        delTask(val){
+          let param = {
+            dsId:this.dsId,
+            taskId:val.gid
+          }
+          console.log(val)
+          this.sendRequest('/Task/Del',param,res =>{
+            this.getTaskTree()
+          })
+        },
         // 操作位置
         onHandlePosition(val,isUp){
+          this.choiceId = val.gid
           console.log(val,isUp)
           let param = {
-            taskId:val.eId,
+            taskId:val.gid,
             direction:isUp,
           }
           this.sendRequest('/Task/update_position',param,res => {
             console.log(res)
+            this.getTaskTree()
           })
         },
-
+        // 树结构获取
+        getTaskTree(){
+          this.sendRequest(`/Query/design_task_tree/${this.dsId}`,'',res => {
+            console.log(res)
+            this.dataList = res.result[0]
+          })
+        }
     },
 
     beforeCreate() {
 
     },
+    beforeDestroy(){
+      this.$event.$off('updateLeft',);
+    },
     created() {
+      this.getTaskTree()
+      this.$event.$on('updateLeft',()=>{
+        // alert(2223)
+        this.getTaskTree()
+        // alert(2323)
+      })
     },
 }
 </script>
@@ -185,6 +266,12 @@ export default {
         box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
         border-radius: 2px;
         color: #6B92F4;
+    }
+    .item-selected {
+        background: #fff;
+        box-shadow: 0 2px 6px 0 rgba(0,0,0,0.08);
+        border-radius: 2px;
+        color: #6B92F4!important;
     }
     .item-until:hover {
         background: #fff;

@@ -39,7 +39,7 @@
             </el-menu>
           </el-aside>
           <el-main>
-            <router-view :itemList='itemList' @pageChange='pageChange'></router-view>
+            <router-view :itemList='itemList' @pageChange='pageChange' @keyChange='keyChange'></router-view>
           </el-main>
         </el-container>
     </div>
@@ -60,6 +60,7 @@ export default {
       itemList:[],
       pageIndex:1,  //翻页
       pageSize:4,
+      keyword:'',
     };
   },
 
@@ -93,10 +94,14 @@ export default {
       this.$router.push(val)
       this.getDesignList()
     },
+    // 关键字
+    keyChange(val){
+      this.keyword = val
+      this.getDesignList()
+    },
     getDesignList(){
       let sortVal = ''
       // return
-      console.log(this.menuVal)
       switch (this.menuVal){
         case '\/createlist':
           sortVal = 1
@@ -112,16 +117,14 @@ export default {
           break
       }
       let param = {
-        keyword: '',
+        keyword: this.keyword,
         status: 0,
         sort: sortVal,  // 1= 创建 2 = 分类 4 = 分享 8 = 使用 
         pageIndex: this.pageIndex,
         pageSize:this.pageSize,
       }
       this.sendRequest('/Query/design',param,res=>{
-        console.log(res)
         this.itemList = res.result[0].items
-        console.log(this.itemList)
       })
     }
   },

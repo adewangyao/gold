@@ -28,17 +28,27 @@ components: {
 
 data() {
   return {
-    value:'新建任务组',
-    initInn:'<a>sas</a>'
+    value:'',
+    initInn:''
   };
 },
 
 computed: {
-
+  leftClick:function(){
+    return this.$store.state.leftInfo
+    //  this.addtypeChange(this.addtype)
+  }
 },
 
 watch: {
+  leftClick:function(nVal,oVal){
 
+    if(nVal.isEdit){
+      this.value = nVal.title
+    }else {
+      this.value = ''
+    }
+  }
 },
 
 methods: {
@@ -48,24 +58,44 @@ methods: {
   },
   saveTitle(){
     this.getContent()
+    if(!this.value){
+      this.$alert('请输入名称', {
+        confirmButtonText: '确定',
+      });
+      return
+    }
+    if(!this.initInn){
+      console.log(this.initInn)
+      this.$alert('请输入介绍', {
+        confirmButtonText: '确定',
+      });
+      return
+
+    }
+
     let param = {
       title: this.value,
       content: this.initInn,
       dsId: this.$route.query.id,
-      position: 2
+      gid:this.leftClick.gid,
     }
-    this.sendRequest('/Task/create_task_group',param,(res)=>{
+    console.log(param)
+    // return
+    this.sendRequest('/Task/task_group_mgr',param,(res)=>{
+      let resText = ''
+      this.leftClick.gid?resText='修改':resText='创建'
       if(res.retcode==0&&res.result.length){
+        this.$event.$emit('updateLeft',);
         this.$notify({
           // title: '创建成功',
-          message: '创建成功',
+          message: `${resText}成功`,
           type: 'success',
           duration:1000,
         });
       }else {
         this.$notify.error({
           // title: '创建失败',
-          message: '创建失败',
+          message: `${resText}失败`,
           duration:1000,
         });
       }
@@ -74,11 +104,11 @@ methods: {
   handleChange(){}
 },
 
-beforeCreate() {
-
+beforeDestroy(){
+  // this.$event.$off('updateLeft',);
 },
 created() {
-
+ this.value = this.$store.state.leftInfo.title
 },
 }
 </script>

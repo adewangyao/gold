@@ -19,7 +19,9 @@ name:'tasktitle',
 components: {
   TaskBtn,
 },
-
+props:{
+  data:Object
+},
 data() {
   return {
     name:"",
@@ -31,15 +33,20 @@ computed: {
 },
 
 watch: {
-
+  data:function(n,v){
+    console.log(n)
+  }
 },
 
 methods: {
   nameBlur(){
+      let {gid} = this.$store.state.leftInfo
+      console.log(gid)
+      // return
       let param = {
-        position: 0,
-        content: "string",
-        taskId: 1,
+        content: this.name,
+        taskId: gid,
+        cId:this.data.gid,
       }
       this.sendRequest('/TaskContent/create_title',param,res=>{
         console.log(res)
@@ -55,7 +62,8 @@ beforeCreate() {
 
 },
 created() {
-
+  this.name=this.data.title
+  console.log(this.data)
 },
 }
 </script>

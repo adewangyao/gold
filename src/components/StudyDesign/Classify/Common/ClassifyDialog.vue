@@ -50,7 +50,6 @@ export default {
       if(this.val){
         id = this.val.gId
       }else {
-        alert(2)
         id = ''
       }
       if(!this.input){
@@ -72,6 +71,8 @@ export default {
               duration:1000,
           })
           this.isVisable = false
+          this.input = ''
+          this.$emit('upList')
           // this.getCategory()
         }else{
           this.$notify.error({

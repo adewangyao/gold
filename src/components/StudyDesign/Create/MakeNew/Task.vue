@@ -1,7 +1,7 @@
 <!-- 任务界面 -->
 <template>
     <div class="task-box">
-        <div class="task-top" v-if="nowType!='tasekGroupTitle'">
+        <div class="task-top" v-if="nowType=='task'||nowType=='tasekChild'">
             <el-input
                 @input='handleChange'
                 placeholder=""
@@ -12,18 +12,28 @@
                 手动开启
             </span>
             <el-switch
-                active-value="100"
-                inactive-value="0"
+                active-value=1
+                inactive-value=0
                 v-model="openVal"
                 >
             </el-switch>
-            <span class="task-top-font">
-                闯关模式
-            </span>
+            <el-tooltip placement="top">
+              <div slot="content" class="tip-text">
+                完成标准：<br>
+                文字阅读，打开该页面即达成；<br>
+                资源查看：打开该资源可以达成，注意记录打开次数与时长；<br>
+                错题订正：完成所有错题订正后可以完成；<br>
+                作品提交：完成个人、小组提交动作后可达成；<br>
+                量表评价：三种量表评价，完成自评后可达成；
+            </div>
+              <span class="task-top-font">
+                  闯关模式
+              </span>
+            </el-tooltip>
             <el-switch
                 v-model="breakVal"
-                active-value="100"
-                inactive-value="0"
+                active-value=1
+                inactive-value=0
                 >
             </el-switch>
             <span class="task-save" @click="onSaveClick">
@@ -71,8 +81,8 @@ props:{
 data() {
   return {
       value:"",
-      openVal:"",
-      breakVal:"",
+      openVal:false,
+      breakVal:false,
       componentData:[],   //循环组件
   };
 },
@@ -81,14 +91,27 @@ computed: {
   nowType:function(){     //当前选中的左侧菜单位置
     return this.$store.state.choiceType
   },
+  leftClick:function(){
+    return this.$store.state.leftInfo
+    //  this.addtypeChange(this.addtype)
+  }
 
 },
 
 watch: {
     addClick(nVal,oVal){
-      console.log(this.addtype)
       this.addtypeChange(this.addtype)
+    },
+    leftClick(nVal,oVal){
+      if(nVal.type==2){
+        this.value = nVal.title
+      }else {
+        this.value = ''
+      }
+
+      this.getTaskContent()
     }
+
 },
 
 methods: {
@@ -99,7 +122,7 @@ methods: {
     // 动态添加组件函数
     addtypeChange(val){
         let addEl = ''
-        console.log(val)
+        // console.log(val)
         switch(val){
             case '标题':
                 addEl='task-title'
@@ -129,7 +152,7 @@ methods: {
         this.componentData.push(
             {
                 type:addEl,
-                itemData:'1'
+                itemData:{}
             }
         )
     },
@@ -137,45 +160,113 @@ methods: {
     handleBtn(){
 
     },
-    // 保存
+    // 顶部人名称处保存
     onSaveClick(){
+      // 处理是否是新建或者编辑的一些逻辑
       let item = this.$store.state.leftInfo
       console.log(item)
-      return
+      let gid = ''
+      item.isEdit?gid = item.gid:gid = ''
       let parentId = ''
-      let dsid = ''
-      if(item=='new'){     //如果是点击上册新建任务 传o如果是任务群下新建传父eid
-        parentId = 0
-        dsid = 0
+      // let dsid = ''
+      if(item=='new'){     //如果是点击上面新建任务 传o如果是任务群下新建传父eid
+        parentId = ''
       }else{
         parentId = item.gid
-        dsid = item.dsId
       }
+
+      console.log(gid)
+      // return
       let param = {
-        parentId:parentId,    //pattern =1, 手工开启， 2：闯关模式
-        dsId: dsid,
-        pattern:2,
-        position: 1,
-        title:this.value,
-        completedStd :3,
+        parentId: parentId,
+        dsId: this.$route.query.id,
+        manual: Boolean(this.openVal),
+        breakThrough: Boolean(this.breakVal),
+        completedStd: 1,
+        title: this.value,
+        // gid:gid,
       }
-      this.sendRequest('/Task/create_task',param,(res)=>{
-        console.log(res)
+      if(item.isEdit){param.gid=item.gid}
+      if(item=='new'){delete param.parentId}  //新建同级时删除parengis属性
+      this.sendRequest('/Task/task_mgr',param,(res)=>{
+        this.$event.$emit('updateLeft',);
       })
     },
+    // 右侧内容
+    getTaskContent(){
+      this.componentData = []
+      console.log(this.$store.state.leftInfo)
+      let param = {
+        taskId:this.$store.state.leftInfo.gid,
+        dsId:this.$route.query.id,
+      }
+      // "标题": 1,
+      // "工具": 64,
+      // "量表": 32,
+      // "提交": 16,
+      // "文字": 2,
+      // "学练": 8,
+      // "预留": 128,
+      // "资源": 4
+      this.sendRequest('/Query/task_content',param,res => {
+        console.log(res)
 
+        if(res.retcode==0&&res.result[0]){
+
+          // 处理应该东右侧应该渲染的组件
+          this.delRightData(res.result[0])
+
+        }
+      })
+    },
+    // 处理应该东右侧应该渲染的组件
+    delRightData(val){
+      this.componentData = []
+      val.forEach((item,i)=>{
+        let addInfo = {}
+        addInfo.itemData = item
+        switch(item.type){
+          case 1 :    //标题
+            addInfo.type = 'task-title'
+            break;
+          case 64 :    //工具
+            addInfo.type = 'subject-tool'
+            break;
+          case 32 :    //量表
+            addInfo.type = 'task-scale'
+            break;
+          case 16 :    //提交
+            // addInfo.type = 'task-trainer'
+            break;
+          case 2 :    //文字
+            addInfo.type = 'rich-text'
+            break;
+          case 8 :    //学练
+            addInfo.type = 'trainer'
+            break;
+          case 128 :    //预留
+            addInfo.type = 'teacher-reserve'
+            break;
+          case 4 :    //资源
+            // addInfo.type = 'task-trainer'
+            break;
+        }
+        this.componentData.push(addInfo)
+      })
+    },
     // 任务标题
     creteTitle(){
 
     }
 },
 
-beforeCreate() {
-
-},
-created() {
-
-},
+  beforeDestroy(){
+    console.log(2)
+    // this.$event.$off('updateLeft',);
+  },
+  created() {
+    // this.getTaskContent()
+  },
 }
 </script>
 <style  scoped>
@@ -215,5 +306,8 @@ created() {
         font-size: 14px;
         cursor: pointer;
         margin-left: 20px;
+    }
+    .tip-text {
+      line-height: 20px;
     }
 </style>

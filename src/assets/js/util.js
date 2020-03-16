@@ -95,132 +95,10 @@ export default {
             return protocol + origin;
         }
 
-        Vue.prototype.getWebServiceURL = function(m) {
-            return "/ANAService.asmx/" + m
-        }
 
-        Vue.prototype.getWebServiceURL1 = function(m) {
-            return "/ZoneService.asmx/" + m
-        }
 
-        Vue.prototype.getWebServiceURL2 = function(m) {
-            return "/CommService.asmx/" + m
-        }
+        Vue.prototype.$event = new Bus()
 
-        Vue.prototype.getWebServiceURL3 = function(m) {
-            return "/ConsoleService.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL4 = function(m) {
-            return "/ResourceService.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL5 = function(m) {
-            return "/VideoService.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL6 = function(m) {
-            return "/StService.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL7 = function(m) {
-            return "/AccountService.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL8 = function(m) {
-            return "/PaasService.asmx/" + m
-        }
-        Vue.prototype.getWebServiceURL9 = function(m) {
-            return "/StudyService.asmx/" + m
-        }
-        Vue.prototype.getWebServiceURL10 = function(m) {
-            return "/HTService.asmx/" + m
-        }
-
-        Vue.prototype.getANAFTSServiceURL = function(m) {
-            return "/ANAFileTransferService.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL11 = function(m) {
-            return "/ConsoleService_ZYBH.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL12 = function(m) {
-            return "/VHallService.asmx/" + m
-        }
-
-        Vue.prototype.getWebServiceURL13 = function(m) {
-            return "/GooseService.asmx/" + m
-        }
-        Vue.prototype.getWebServiceURL14 = function(m) {
-            return "/QAService.asmx/" + m
-        }
-        Vue.prototype.getWebServiceURL15 = function(m) {
-            return "/WeChatParentService.asmx/" + m
-        }
-
-        Vue.prototype.getYoYaURL = function(m) {
-            let basicURL = 'http://test.fc.forclass.net/Home/'
-            if (this.getCurrentEnv() == 'production') {
-                basicURL = 'http://www.forclass.net/Home/'
-            }
-            return basicURL + m
-        }
-
-        Vue.prototype.getUrlC = function(m) {
-            return this.getWSDomain() + this.getWebServiceURL3(m)
-        }
-        Vue.prototype.getHdUrl = function(m) {
-            return this.getWSDomain() + this.getWebServiceURL10(m)
-        }
-
-        Vue.prototype.getUrlCom = function(m) {
-            return this.getWSDomain() + this.getWebServiceURL2(m)
-        }
-
-        Vue.prototype.getUrlWcl = function(m) {
-            return this.getWSDomain() + this.getWebServiceURL12(m)
-        }
-
-        Vue.prototype.getUrlCourse = function(m) {
-            return this.getWSDomain() + this.getWebServiceURL13(m)
-        }
-
-        Vue.prototype.getUrlRes = function(m) {
-            return this.getWSDomain() + this.getWebServiceURL4(m)
-        }
-        Vue.prototype.getUrlQa = function(m) {
-            return this.getWSDomain() + this.getWebServiceURL14(m)
-        }
-
-        Vue.prototype.Bus = new Bus()
-
-        Vue.prototype.getProfileData = function(systemAlias) {
-            if (this.isValid(systemAlias) && systemAlias != '') {
-                let account = this.loadAccount()
-                if (this.isValid(account)) {
-                    let profileInfo = this.getLocalVal(systemAlias + "_" + "profile" + "_" + account.loginname)
-                    if (this.isValid(profileInfo) && profileInfo != '') {
-                        return JSON.parse(profileInfo)
-                    }
-                }
-            }
-            return null
-        }
-
-        Vue.prototype.updateProfile = function(alias, profile) {
-            if (this.isValid(profile) && this.isValid(alias) && alias != '') {
-                let account = this.loadAccount()
-                if (this.isValid(account)) {
-                    let loginName = account.loginname
-                    let key = alias + "_profile_" + loginName
-                    let localProfile = this.getProfileData('console')
-                    localProfile = localProfile ? localProfile : {}
-                    Object.assign(localProfile, profile)
-                    this.updateLocal(key, JSON.stringify(profile))
-                }
-            }
-        }
 
         Vue.prototype.startLoading = function() {
             Vue.prototype.loading = this.$loading({
@@ -235,13 +113,7 @@ export default {
             Vue.prototype.loading.close();
         }
 
-        Vue.prototype.getRequestParamValue = function(name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)")
-            var ret = regex.exec(location.search)
-            return ret == null ? "" : decodeURIComponent(ret[1].replace(/\+/g, " "))
-        }
-
+        // 获取session
         Vue.prototype.getSession = function() {
             var acnt = this.loadAccount()
             if (this.isValid(acnt) &&
@@ -250,37 +122,6 @@ export default {
             }
         }
 
-        Vue.prototype.saveAccount = function(acnt) {
-            if (!this.isValidArray(acnt.dlserver))
-                acnt.dlserver = "/"
-
-            if (this.isSupportJSON()) {
-                sessionStorage.account = JSON.stringify(acnt)
-            }
-            this.$account = acnt
-            this.$store.commit({ type: 'UPDATE_ACCOUNT', account: { Account: acnt } })
-        }
-
-        Vue.prototype.savePlatform = function(platform) {
-            if (this.isSupportJSON()) {
-                sessionStorage.platform = JSON.stringify(platform)
-            }
-            var date = new Date();
-            var nightDate = date.toLocaleDateString() + " " + "23:59:59";
-            var span = (new Date(nightDate) - new Date()) / 1000 / 3600 / 24;
-            var cookieOptions = { expires: span, path: '/' };
-            var hostName = window.location.hostname;
-            var domain = hostName;
-            var domainArr = domain.split('.');
-            var arrLength = domainArr.length;
-            if (arrLength >= 2) {
-                domain = domainArr[arrLength - 2] + "." + domainArr[arrLength - 1];
-            }
-            if (domain != 'localhost') {
-                cookieOptions.domain = domain;
-            }
-            cookie.set('platform', platform, cookieOptions);
-        }
 
         Vue.prototype.getLocalVal = function(key) {
             var value = (typeof localStorage[key] == "undefined" || localStorage[key] == "undefined") ? "" : localStorage[key]
@@ -297,18 +138,6 @@ export default {
         }
 
         Vue.prototype.loadAccount = function() {
-            /*
-            if (this.isValid(sessionStorage.account) && this.isSupportJSON()) {
-                return JSON.parse(sessionStorage.account)
-            } else if (this.isValid(this.getCookie('account')) && this.isSupportJSON()) {
-                return this.getCookie('account')
-            }
-            */
-
-            /*if (this.isValid(this.getCookie('account')) && this.isSupportJSON()) {
-                return this.getCookie('account')
-            }
-            return null*/
             let device = this.getSessionVal('device') || window.navigator.userAgent.toLowerCase().indexOf('wke') >= 0
             let tool = this.getSessionVal('tool')
             let clientBrowser = device || tool
@@ -368,129 +197,10 @@ export default {
             return support
         }
 
-        Vue.prototype.isParent = function() {
-            var account = this.loadAccount()
-            if (this.isValid(account))
-                return account.role == "家长"
-
-            return false
-        }
-
-        Vue.prototype.isStudent = function() {
-            var account = this.loadAccount()
-            if (this.isValid(account))
-                return account.role == "学生"
-
-            return false
-        }
-
-        Vue.prototype.isTeacher = function() {
-            var account = this.loadAccount()
-            if (this.isValid(account))
-                return account.role == "教师"
-
-            return false
-        }
-
         Vue.prototype.isValid = function(value) {
             return value != null && typeof value != 'undefined'
         }
 
-        Vue.prototype.isValidInt = function(prop, minValue) {
-            if (!this.isValid(prop) || !$.isNumeric(prop) || prop <= minValue)
-                return false
-
-            return true
-        }
-
-        Vue.prototype.isValidArray = function(arr) {
-            if (!this.isValid(arr) || !this.isValid(arr.length) || arr.length < 1)
-                return false
-            return true
-        }
-
-        Vue.prototype.formateString = function(str) {
-            return this.isValid(str) ? str : ""
-        }
-
-        Vue.prototype.getNavigationUrl = function(alias) {
-            let data = this.getHostInfo(alias)
-            if (this.isValid(data)) {
-                let protocol = location.protocol
-                if (protocol == 'https:') {
-                    return protocol + "//" + data.HostName + data.Path
-                } else {
-                    return data.Url
-                }
-            }
-            return ''
-        }
-
-        Vue.prototype.getNavigationHostName = function(alias) {
-            let data = this.getHostInfo(alias)
-            if (this.isValid(data)) {
-                let protocol = location.protocol
-                return protocol + "//" + data.HostName
-            }
-            return ''
-        }
-
-        Vue.prototype.getHostInfo = function(alias) {
-            let platform = this.$store.state.platform
-            if (this.isValid(platform)) {
-                let hostList = platform.NavList
-                let linkList = platform.InNavList
-                if (this.isValid(hostList) && this.isValid(linkList)) {
-                    hostList = hostList.concat(linkList)
-                }
-                if (this.isValidArray(hostList)) {
-                    for (var i = 0; i < hostList.length; i++) {
-                        var host = hostList[i]
-                        let childList = host.ModList
-                        if (host.Alias == alias) {
-                            return host
-                            break
-                        }
-                        if (this.isValidArray(childList)) {
-                            for (let j = 0; j < childList.length; j++) {
-                                let childHost = childList[j]
-                                if (childHost.Alias == alias) {
-                                    return childHost
-                                    break
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null
-        }
-
-        Vue.prototype.getResultData = function(data) {
-            if (typeof data.result != 'undefined' && data.result != null) {
-                return data.result
-            }
-
-            return data
-        }
-
-        Vue.prototype.getReturnCode = function(data) {
-            if (this.isValid(data.ReturnCode)) {
-                return data.ReturnCode
-            }
-
-            return 0
-        }
-
-        Vue.prototype.getResultNextPage = function(data) {
-
-            if (this.isValid(data.NextPage)) {
-                return data.NextPage
-            }
-
-            return 0
-        }
 
         Vue.prototype.getDomain = function() {
             var domain = window.location.hostname.split('.')
@@ -512,33 +222,6 @@ export default {
                 } else {
                     $body.append($scriptObj)
                 }
-            }
-        }
-
-        Vue.prototype.validateSession = function(callback) {
-            let loginUrl = "/Account/SignIn"
-            let clientSession = this.getSession()
-            if (!this.isValid(clientSession)) {
-                console.log('未获取到本地session')
-                    //location.href = loginUrl
-                return
-            } else {
-                let param = { "session": clientSession, "page": 0, "hostName": window.location.hostname }
-                    //axios.post(this.getWSDomain() + "/ANAService.asmx/LoginSessionJson", qs.stringify(param)).then((response) => {})
-                    /*
-                    axios.all([axios.post(this.getWSDomain() + "/ANAService.asmx/LoginSessionJson", qs.stringify(param))]).then(axios.spread(function(result) {
-
-                    }))
-                    return
-                    */
-                let api = this.getWSDomain() + this.getWebServiceURL7('LoginSessionJson')
-                this.addToQueue(api, param, function(result, that) {
-                        that.loadSession(result, that)
-                        if (typeof(callback) == "function") {
-                            callback()
-                        }
-                    }, this, false)
-                    //this.addToQueue(this.getWebServiceURL7("LoginSessionJson"), param, this.loadSession, this, true)
             }
         }
 
@@ -709,6 +392,9 @@ export default {
         //         })
         //     }
         // }
+
+
+        // 封装的简单发送请求
         Vue.prototype.sendRequest = function(methodName, inputObj, handleFunc, target, next) {
             this.$axios.post(methodName,inputObj)
             .then(res=>{
@@ -718,41 +404,8 @@ export default {
             })
         }
 
-        
-        Vue.prototype.getNavList = function(callback) {
-            let hostName = window.location.hostname
-            let account = this.loadAccount()
-            let param = {
-                session: this.getSession() || null,
-                hostName: hostName,
-                platformNumber: '',
-                platformName: null,
-                role: account ? account.role : null
-            }
 
-            // this.Platform = this.getDefaultPlatformInfo()
-            // this.$store.commit({ type: 'UPDATE_PLATFORM', platform: this.Platform })
-            // return
-
-            let api = this.getWSDomain() + this.getWebServiceURL8('GetPlatformSystemHost')
-            this.addToQueue(api, param, function(result, that) {
-                let platform = null
-                if (that.isValidArray(result)) {
-                    // console.log(1)
-                    platform = result[0]
-                        //that.savePlatform(platform)
-                } else {
-                    // console.log(2)
-                    platform = that.getDefaultPlatformInfo()
-                }
-                window.document.title = platform.PlatformSystemName
-                that.$store.commit({ type: 'UPDATE_PLATFORM', platform: platform })
-                if (typeof(callback) == 'function') {
-                    callback(platform)
-                }
-            }, this, false)
-        }
-
+        // 获取平台
         Vue.prototype.getDefaultPlatformInfo = function() {
             return {
                 PlatformSystemNumber: '000001',
@@ -810,196 +463,7 @@ export default {
                 ]
             }
         }
-        Vue.prototype.sendCPPMessage = function(data, type, className, callback, multiple, maxNum, maxSize) {
-            let device = this.getSessionVal('device')
 
-            if (type == 'scrollScreen') {
-                var scrollY = data.scrollY;
-                var $item = $('<scrolly>', {
-                    'num': scrollY
-                });
-                var result = $item.prop('outerHTML');
-                CallCPP(result);
-            } else if (type == 'export' || type == 'open') {
-                var $result = this.getDownloadXml(data, type, className);
-                var result = $result.prop('outerHTML');
-                CallCPP(result);
-            } else if (type == 'touchmode') {
-                var $item = $('<touchmode>', {
-                    'enable': data
-                })
-                var result = $item.prop('outerHTML');
-                CallCPP(result);
-            } else if (type == 'upload' || type == 'uploadimage' || type == 'uploadppt' || type == 'uploaddcf' || type == 'uploadres') {
-                if (device == 'androidPadCKL') {
-                    let that = this
-                    let baseOrigin = 'http://test.zzn.271bay.com'
-                    let notifyStr = baseOrigin + '/Account/UpdateAndroidFileState'
-                    let isMulti = this.isValid(multiple) ? multiple : false
-                    let maxUploadNum = this.isValidInt(maxNum, 0) ? maxNum : 1
-                    let maxUploadSize = this.isValid(maxSize) ? maxSize : 0
-                    let singleUploadFlag = false // 保证每次只取一次有效结果，防止多次渲染
-                    if (isMulti) {
-                        notifyStr = baseOrigin + '/Account/UpdateFileState'
-                    }
-                    var currid = setInterval(function() {
-                        $.post(baseOrigin + "/Account/Polling", { session: that.getSession() },
-                            function(data) {
-                                if (that.isValid(data) && data != '' && !singleUploadFlag) {
-                                    singleUploadFlag = true
-                                    if (data.indexOf("SUCCESS") == 0) { // 单文件上传
-                                        clearInterval(currid);
-                                        var rets = data.split('|');
-                                        if (that.isValidArray(rets) && rets.length > 1) {
-                                            let obj = {
-                                                'uniqueName': rets[1],
-                                                'url': that.replaceUrl2OSSCDN(rets[2]),
-                                                'name': rets[3],
-                                                'size': rets[4]
-                                            }
-                                            callback(obj)
-                                        }
-                                        $.post(baseOrigin + "/Account/ClearAndroidCache", { session: that.getSession() }, function() {});
-                                    } else { // 多文件上传
-                                        clearInterval(currid);
-                                        let arr = eval(data)
-                                        if (that.isValidArray(arr)) {
-                                            let trans_arr = []
-                                            for (let i = 0; i < arr.length; i++) {
-                                                trans_arr.push({
-                                                    'uniqueName': arr[i].UniqueName,
-                                                    'url': that.replaceUrl2OSSCDN(arr[i].Url),
-                                                    'name': arr[i].Name,
-                                                    'size': arr[i].FileSize
-                                                })
-                                            }
-                                            callback(trans_arr)
-                                        }
-                                        $.post(baseOrigin + "/Account/ClearAndroidCache", { session: that.getSession() }, function() {});
-                                    }
-                                }
-                            });
-                    }, 3000);
-                    let mimeType = '*/*'
-                    if (type == 'uploadimage') {
-                        mimeType = 'image/*'
-                    }
-                    if (type == 'uploadppt') {
-                        mimeType = 'ppt,pptx'
-                    }
-                    if (type == 'uploaddcf') {
-                        mimeType = 'dcf'
-                    }
-                    if (type == 'uploadres') {
-                        mimeType = 'image/*,ppt,pptx,dcf,doc,docx,xls,xlsx,wps,pdf,txt,mp3,mp4,mov,mpeg'
-                    }
-
-                    var androidParam = {
-                        'cmd': 'fileUpload',
-                        'multiple': isMulti,
-                        'maxNum': maxUploadNum,
-                        'mimeType': mimeType,
-                        'notifyUrl': notifyStr,
-                        'maxsize': maxUploadSize
-                    };
-                    console.log(androidParam)
-                    HostApp.alert(androidParam);
-                } else {
-                    // pc客户端上传
-                    let that = this
-                    let baseOrigin = location.protocol + '//'
-                    if (this.getCurrentEnv() == "production") {
-                        baseOrigin += 'zzn.271bay.com'
-                    } else {
-                        baseOrigin += 'test.zzn.271bay.com'
-                    }
-                    let notifyStr = baseOrigin + '/Account/UpdateFileState'
-                    let isMulti = this.isValid(multiple) ? multiple : false
-                    let maxUploadNum = this.isValidInt(maxNum, 0) ? maxNum : 1
-                    let maxUploadSize = this.isValid(maxSize) ? maxSize : 0
-                    let singleUploadFlag = false // 保证每次只取一次有效结果，防止多次渲染
-                    var currid = setInterval(function() {
-                        $.post(baseOrigin + "/Account/Polling", { session: that.getSession() },
-                            function(data) {
-                                console.log(data)
-                                if (that.isValid(data) && data != '' && !singleUploadFlag) {
-                                    singleUploadFlag = true
-                                    var list = $.parseJSON(data);
-                                    if (that.isValidArray(list)) {
-                                        clearInterval(currid);
-                                        var arr = [];
-                                        for (var i = 0; i < list.length; i++) {
-                                            var item = list[i];
-                                            var name = item.Name;
-                                            var uniqueName = item.UniqueName;
-                                            var size = item.FileSize;
-                                            var url = item.Url;
-                                            var res = {
-                                                'uniqueName': uniqueName,
-                                                'url': that.replaceUrl2OSSCDN(url),
-                                                'name': name,
-                                                'size': size
-                                            };
-                                            arr.push(res);
-                                        }
-                                        callback(arr);
-                                        $.post(baseOrigin + "/Account/ClearAndroidCache", { session: that.getSession() }, function() {});
-                                    }
-                                }
-                            });
-                    }, 3000);
-                    let mimeType = ''
-                    let acceptStr = null
-                    if (type == 'uploadimage') {
-                        mimeType = 'img'
-                        acceptStr = '.jpg,.jpeg,.png'
-                    }
-                    if (type == 'uploadppt') {
-                        mimeType = '*.ppt'
-                        acceptStr = '.ppt,.pptx'
-                    }
-                    if (type == 'uploaddcf') {
-                        mimeType = '*.dcf'
-                        acceptStr = '.dcf'
-                    }
-                    if (type == 'uploadres') {
-                        mimeType = '*'
-                        acceptStr = '.ppt,.pptx,.dcf,.mp3,.mp4,.mov,.mpeg,.doc,.docx,.xls,.xlsx,.wps,.pdf,.txt,.jpg,.jpeg,.gif,.png,.bmp'
-                    }
-                    var cppParam = {
-                        'cmd': 'fileUpload',
-                        'mimeType': mimeType,
-                        'multiple': isMulti,
-                        'accept': acceptStr,
-                        'maxNum': maxUploadNum,
-                        'notifyUrl': notifyStr,
-                        'jsCallback': 'coursepccallback',
-                        'maxsize': maxUploadSize
-                    };
-                    var $item = $('<upload>', cppParam)
-                    var result = $item.prop('outerHTML');
-                    console.log(result)
-                    CallCPP(result);
-                }
-            } else {
-                var result = null;
-                if (data.constructor == Array) {
-                    var $result = this.getDownloadXml(data, type, className);
-                    result = $result.prop('outerHTML');
-                } else if (data.constructor == Object) {
-                    var $dir = $('<batchdownload>', { 'dirname': data.name });
-                    var childList = data.childlist;
-                    if (this.isValidArray(childList)) {
-                        for (var i = 0; i < childList.length; i++) {
-                            var $xml = this.getDownloadXml([childList[i]], type, data.name);
-                            $xml.appendTo($dir);
-                        }
-                    }
-                    result = $dir.prop('outerHTML');
-                }
-                CallCPP(result);
-            }
-        }
 
         Vue.prototype.getDownloadXml = function(list, type, className) {
             let $xml = $('<download>', {
@@ -1100,26 +564,5 @@ export default {
             return url;
         }
 
-        Vue.prototype.uniqueid = function() {
-            if (!Array.prototype.derangedArray) {
-                Array.prototype.derangedArray = function() {
-                    var a = this
-                    var len = a.length;
-                    for (var i = 0; i < len; i++) {
-                        var end = len - 1;
-                        var index = (Math.random() * (end + 1)) >> 0;
-                        var t = a[end];
-                        a[end] = a[index];
-                        a[index] = t;
-                    }
-                    return a;
-                }
-            }
-            let timestamp = new Date().getTime()
-            let randomNumber = Math.floor(Math.random() * (1 - 10000000000) + 10000000000)
-            let uniqueid = timestamp + randomNumber
-            uniqueid = String(uniqueid).split("").derangedArray().join("")
-            return uniqueid
-        }
     }
 }
